@@ -1,6 +1,12 @@
 from groq import Groq
+import os 
 
-client = Groq(api_key="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")
+API_key = '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'
+
+# QUESTION: HOW TO SET A ENVIRONMENT VARIABLE?
+
+
+client = Groq(api_key= API_key)
 
 chat_completion = client.chat.completions.create(
     messages = [
