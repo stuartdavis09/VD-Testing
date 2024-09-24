@@ -82,4 +82,7 @@ chat_completion = client.chat.completions.create(
     temperature = 0
 )
 
-print(chat_completion.choices[0].message.content)
+dataStore = open("Results\CWE-{0}-{1}-testing.txt".format(cweTested, promptTechnique), "x")
+dataStore.write(chat_completion.choices[0].message.content)
+
+print("completed security check")
