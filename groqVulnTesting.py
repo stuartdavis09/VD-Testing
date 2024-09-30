@@ -9,13 +9,20 @@ client = Groq(api_key= API_key)
 
 
 # INPUTS
+inputs = {}
+with open (r"testingInfo.txt", "r") as file:
+    for line in file:
+        lineList = line.split(' - ')
+        
+        inputs[lineList[0]] = lineList[1].removesuffix("\n")
 
-file_path = r"SecLLMHolmes\datasets\real-world\{0}\CVE-2023-{1}\{2}.c".format(model, testingCode, patchStatus)
+print(inputs)
 
 
 
-promptTechnique = input("what prompt technique would you like to run it through? (D1-D5) ")
-cweTested = int(input("what CWE index is being tested for? "))
+
+
+file_path = r"SecLLMHolmes\datasets\real-world\{0}\CVE-2023-{1}\{2}.c".format(inputs["testingModel"], inputs["testingCodeNumber"], inputs["patchStatus"])
 ###############################################################
 
 
@@ -24,19 +31,20 @@ cweTested = int(input("what CWE index is being tested for? "))
 
 # SAMPLES
 vulnSamples = [
-    r"\SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\1.c".format(cweTested),
-    r"\SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\2.c".format(cweTested),
-    r"\SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\3.c".format(cweTested),
+    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\1.c".format(inputs["cweTested"]),
+    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\2.c".format(inputs["cweTested"]),
+    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\3.c".format(inputs["cweTested"]),
    ]
 for idx in range(len(vulnSamples)):
+    print(vulnSamples[idx])
     with open(vulnSamples[idx], "r") as file:
         vulnSamples[idx] = file.read()
     
 
 patchedSamples = [
-    r"\SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_1.c".format(cweTested),
-    r"\SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_2.c".format(cweTested),
-    r"\SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_3.c".format(cweTested),
+    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_1.c".format(inputs["cweTested"]),
+    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_2.c".format(inputs["cweTested"]),
+    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_3.c".format(inputs["cweTested"]),
    ]
 for idx in range(len(patchedSamples)):
     with open(patchedSamples[idx], "r") as file:
@@ -50,12 +58,12 @@ for idx in range(len(patchedSamples)):
 
 
 # PROMPT CREATION
-vuln = db.get(cweTested)
+vuln = db.get(inputs["cweTested"])
 vulnName = vuln.name
 vulnDesc = vuln.description
 promptTemplate = "Does the following code contain a vulnerability (YES/NO)? Include an explanation in the response."
 
-if promptTechnique == "D4":
+if inputs["promptingTechnique"] == "D4":
     promptTemplate += " Please explain in step-by-step format.\n"
 else:
     promptTemplate += "\n"
@@ -84,7 +92,7 @@ chat_completion = client.chat.completions.create(
     messages = [
         {
             "role" : "system",
-            "content" : prompts[promptTechnique],
+            "content" : prompts[inputs["promptingTechnique"]],
         },
         {
             "role" : "user",
@@ -96,7 +104,7 @@ chat_completion = client.chat.completions.create(
     temperature = 0
 )
 
-dataStore = open("Results\CWE-{0}-{1}-testing.txt".format(cweTested, promptTechnique), "x")
+dataStore = open("Results\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingModel"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
 dataStore.write(chat_completion.choices[0].message.content)
 
 

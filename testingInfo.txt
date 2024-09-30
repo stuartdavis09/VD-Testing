@@ -1,4 +1,5 @@
-testingModel
-testingCodeNumber
-patchStatus
-cweTested
+testingModel - gpac
+testingCodeNumber - 1452
+patchStatus - patch
+cweTested - 787
+promptingTechnique - D1
