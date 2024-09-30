@@ -1,0 +1,4 @@
+testingModel
+testingCodeNumber
+patchStatus
+cweTested
