@@ -1,0 +1,22 @@
+Yes, the function `gf_text_get_utf8_line` contains a vulnerability due to an out-of-bounds write.
+
+In the case where the input is UTF-16 big-endian (unicode_type==2), the following block of code swaps the bytes of each 2-byte character:
+
+```c
+if (unicode_type==2)
+{
+	i=0;
+	while (1) {
+		char c;
+		if (!szLine[i] && !szLine[i+1]) break;
+		c = szLine[i+1];
+		szLine[i+1] = szLine[i];
+		szLine[i] = c;
+		i+=2;
+	}
+}
+```
+
+However, there is no check to ensure that the input string `szLine` has an even number of characters. If the input string has an odd number of characters, this loop will read past the end of the string, causing an out-of-bounds write.
+
+To fix this vulnerability, you should add a check to ensure that the input string has an even number of characters before entering this loop.

@@ -1,5 +1,5 @@
-testingModel - gpac
-testingCodeNumber - 1452
+testingModel - pjsip
+testingCodeNumber - 27585
 patchStatus - patch
 cweTested - 787
 promptingTechnique - D1

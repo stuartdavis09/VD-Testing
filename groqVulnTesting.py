@@ -2,7 +2,12 @@ from groq import Groq
 from cwe import Database
 
 db = Database()
-API_key = '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'
+
+with open ("API_key.txt", "r") as file:
+    for line in file:
+        API_key = line
+
+print(API_key)
 client = Groq(api_key= API_key)
 
 
@@ -15,8 +20,6 @@ with open (r"testingInfo.txt", "r") as file:
         lineList = line.split(' - ')
         
         inputs[lineList[0]] = lineList[1].removesuffix("\n")
-
-print(inputs)
 
 
 

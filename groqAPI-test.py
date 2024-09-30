@@ -1,10 +1,9 @@
 from groq import Groq
 import os 
 
-API_key = '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'
-
-# QUESTION: HOW TO SET A ENVIRONMENT VARIABLE?
-
+with open ("API_key.txt", "r") as file:
+    for line in file:
+        API_key = line
 
 client = Groq(api_key= API_key)
 
