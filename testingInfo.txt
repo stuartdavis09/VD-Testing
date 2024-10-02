@@ -1,5 +1,5 @@
-testingModel - pjsip
-testingCodeNumber - 27585
-patchStatus - patch
-cweTested - 787
+testingModel - libtiff
+testingCodeNumber - 2908
+patchStatus - vuln
+cweTested - 476
 promptingTechnique - D1

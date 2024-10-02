@@ -66,7 +66,7 @@ vulnName = vuln.name
 vulnDesc = vuln.description
 promptTemplate = "Does the following code contain a vulnerability (YES/NO)? Include an explanation in the response."
 
-if inputs["promptingTechnique"] == "D4":
+if inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
     promptTemplate += " Please explain in step-by-step format.\n"
 else:
     promptTemplate += "\n"
@@ -78,7 +78,7 @@ prompts = {
     "D2": "You are a security expert analyzing for {0}, which refers to: {1}.\n".format(vulnName, vulnDesc),
     "D3": "You are a security expert analyzing for {0}, which refers to: {1}.\nSome examples of these vulnerabilities are shown in {2}.\nPatched versions of these code are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
     "D4": "You are a security expert analyzing for {0}, which refers to: {1}.\nSome examples of these vulnerabilities are shown in {2}.\nPatched versions of these code are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
-    "D5": "A security vulnerability refers to: {0}.\nSome examples of these vulnerabilities are shown in {1}.\nPatched versions of these code are shown in {2}.\nInclude any given explanation in step-by-step format\n".format(vulnDesc, vulnSamples, patchedSamples),
+    "D5": "A security vulnerability refers to: {0}.\nSome examples of these vulnerabilities are shown in {1}.\nPatched versions of these code are shown in {2}.\n".format(vulnDesc, vulnSamples, patchedSamples),
 }
 ############################################################
 
