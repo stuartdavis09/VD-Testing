@@ -1,5 +1,5 @@
-testingModel - libtiff
-testingCodeNumber - 2908
-patchStatus - vuln
-cweTested - 476
-promptingTechnique - D1
+testingModel - linux
+testingCodeNumber - 40283
+patchStatus - patch
+cweTested - 416
+promptingTechnique - D5
