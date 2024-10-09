@@ -6,8 +6,6 @@ db = Database()
 with open ("API_key.txt", "r") as file:
     for line in file:
         API_key = line
-
-print(API_key)
 client = Groq(api_key= API_key)
 
 
@@ -25,8 +23,10 @@ with open (r"testingInfo.txt", "r") as file:
 
 
 
-file_path = r"SecLLMHolmes\datasets\real-world\{0}\CVE-2023-{1}\{2}.c".format(inputs["testingModel"], inputs["testingCodeNumber"], inputs["patchStatus"])
+file_path = r"SecLLMHolmes\datasets\real-world\{0}\CVE-2023-{1}\{2}.c".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["patchStatus"])
 ###############################################################
+with open(file_path, "r") as file:
+    code = file.read()
 
 
 
@@ -64,31 +64,25 @@ for idx in range(len(patchedSamples)):
 vuln = db.get(inputs["cweTested"])
 vulnName = vuln.name
 vulnDesc = vuln.description
-promptTemplate = "Does the following code contain a vulnerability (YES/NO)? Include an explanation in the response."
+promptTemplate = "Please analyze the following code and give an explanation:\n{0}\nPlease indicate your analysis with one of the options:\n (1) YES: a security vulnerability is detected\n (2) NO: no security vulnerability detected\n Give your answer in the given format:\nAnswer: ... (based off the options above)\n Explanation: ...".format(code)
 
 if inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
-    promptTemplate += " Please explain in step-by-step format.\n"
-else:
-    promptTemplate += "\n"
+    promptTemplate += "Let's think step-by-step.\n"
 
 
 
 prompts = {
     "D1": "A security vulnerability refers to: {0}.\n".format(vulnDesc),
-    "D2": "You are a security expert analyzing for {0}, which refers to: {1}.\n".format(vulnName, vulnDesc),
-    "D3": "You are a security expert analyzing for {0}, which refers to: {1}.\nSome examples of these vulnerabilities are shown in {2}.\nPatched versions of these code are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
-    "D4": "You are a security expert analyzing for {0}, which refers to: {1}.\nSome examples of these vulnerabilities are shown in {2}.\nPatched versions of these code are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
-    "D5": "A security vulnerability refers to: {0}.\nSome examples of these vulnerabilities are shown in {1}.\nPatched versions of these code are shown in {2}.\n".format(vulnDesc, vulnSamples, patchedSamples),
+    "D2": "You are a security expert that is good at {0} analysis, which refers to {1}.\n".format(vulnName, vulnDesc),
+    "D3": "You are a security expert that is good at {0} analysis, which refers to {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
+    "D4": "You are a security expert that is good at {0} analysis, which refers to: {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
+    "D5": "A security vulnerability refers to: {0}.\nSome vulnerable exemplars are shown in {1}.\nPatched versions of these are shown in {2}.\n".format(vulnDesc, vulnSamples, patchedSamples),
 }
 ############################################################
 
 
 
 
-
-
-with open(file_path, "r") as file:
-    code = file.read()
 
 
 chat_completion = client.chat.completions.create(
@@ -99,15 +93,15 @@ chat_completion = client.chat.completions.create(
         },
         {
             "role" : "user",
-            "content" : promptTemplate + code
+            "content" : promptTemplate,
         }
     ],
 
-    model="mixtral-8x7b-32768",
+    model=inputs["model"],
     temperature = 0
 )
 
-dataStore = open("Results\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingModel"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+dataStore = open("Results\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
 dataStore.write(chat_completion.choices[0].message.content)
 
 

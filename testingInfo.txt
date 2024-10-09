@@ -1,5 +1,6 @@
-testingModel - linux
-testingCodeNumber - 40283
+testingDataset - pjsip
+testingCodeNumber - 27585
 patchStatus - patch
-cweTested - 416
+cweTested - 787
 promptingTechnique - D5
+model - llama3-8b-8192
