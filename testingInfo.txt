@@ -2,5 +2,5 @@ testingDataset - pjsip
 testingCodeNumber - 27585
 patchStatus - patch
 cweTested - 787
-promptingTechnique - D5
+promptingTechnique - D1
 model - llama3-8b-8192

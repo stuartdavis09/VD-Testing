@@ -98,7 +98,7 @@ chat_completion = client.chat.completions.create(
     ],
 
     model=inputs["model"],
-    temperature = 0
+    temperature = 0.5
 )
 
 dataStore = open("Results\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
