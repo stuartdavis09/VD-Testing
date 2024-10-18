@@ -11,6 +11,22 @@ client = Groq(api_key= API_key)
 
 
 
+
+
+vulnLang = {
+    "22": "c",
+    "77": "c",
+    "79": "py",
+    "89": "py",
+    "190": "c",
+    "416": "c",
+    "476": "c",
+    "787": "c"
+}
+
+
+
+
 # INPUTS
 inputs = {}
 with open (r"testingInfo.txt", "r") as file:
@@ -31,13 +47,17 @@ with open(file_path, "r") as file:
 
 
 
+if (inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5"):
+    reasoningMethod = "step-by-step-"
+else:
+    reasoningMethod = ""
+
 
 # SAMPLES
 vulnSamples = [
-    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\1.c".format(inputs["cweTested"]),
-    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\2.c".format(inputs["cweTested"]),
-    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\3.c".format(inputs["cweTested"]),
-   ]
+    r"SecLLMHolmes\datasets\few-shot\examples\cwe-{0}.{1}".format(inputs["cweTested"], vulnLang[inputs["cweTested"]]),
+    r"SecLLMHolmes\datasets\few-shot\{0}reasoning\cwe-{1}.txt".format(reasoningMethod, inputs["cweTested"])
+]
 for idx in range(len(vulnSamples)):
     print(vulnSamples[idx])
     with open(vulnSamples[idx], "r") as file:
@@ -45,10 +65,9 @@ for idx in range(len(vulnSamples)):
     
 
 patchedSamples = [
-    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_1.c".format(inputs["cweTested"]),
-    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_2.c".format(inputs["cweTested"]),
-    r"SecLLMHolmes\datasets\hand-crafted\dataset\CWE-{0}\p_3.c".format(inputs["cweTested"]),
-   ]
+    r"SecLLMHolmes\datasets\few-shot\examples\cwe-{0}-p.{1}".format(inputs["cweTested"], vulnLang[inputs["cweTested"]]),
+    r"SecLLMHolmes\datasets\few-shot\{0}reasoning\cwe-{1}-p.txt".format(reasoningMethod, inputs["cweTested"])
+]
 for idx in range(len(patchedSamples)):
     with open(patchedSamples[idx], "r") as file:
         patchedSamples[idx] = file.read()
@@ -71,12 +90,21 @@ if inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
 
 
 
+# prompts = {
+#     "D1": "A security vulnerability refers to: {0}.\n".format(vulnDesc),
+#     "D2": "You are a security expert that is good at {0} analysis, which refers to {1}.\n".format(vulnName, vulnDesc),
+#     "D3": "You are a security expert that is good at {0} analysis, which refers to {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
+#     "D4": "You are a security expert that is good at {0} analysis, which refers to: {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
+#     "D5": "A security vulnerability refers to: {0}.\nSome vulnerable exemplars are shown in {1}.\nPatched versions of these are shown in {2}.\n".format(vulnDesc, vulnSamples, patchedSamples),
+# }
+
+
 prompts = {
-    "D1": "A security vulnerability refers to: {0}.\n".format(vulnDesc),
-    "D2": "You are a security expert that is good at {0} analysis, which refers to {1}.\n".format(vulnName, vulnDesc),
-    "D3": "You are a security expert that is good at {0} analysis, which refers to {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
-    "D4": "You are a security expert that is good at {0} analysis, which refers to: {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
-    "D5": "A security vulnerability refers to: {0}.\nSome vulnerable exemplars are shown in {1}.\nPatched versions of these are shown in {2}.\n".format(vulnDesc, vulnSamples, patchedSamples),
+    "D1": "Does this code contain instances of the security vulnerability known as {0}.\n".format(vulnName),
+    "D2": "You are a code security expert who analyzes the given code for the security vulnerability known as {0}.\n\n{1}\n".format(vulnName, vulnDesc),
+    "D3": "You are a code security expert who analyzes the given code for the security vulnerability known as {0}.\n\n{1}\n\n{2}\n\n{3}\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
+    "D4": "You are a code security expert who analyzes the given code for the security vulnerability known as {0}.\n\n{1}\n\n{2}\n\n{3}\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
+    "D5": "Analyze the given code for the security vulnerability known as {0}.\n\n{1}\n\n{2}\n\n{3}\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
 }
 ############################################################
 
@@ -101,7 +129,7 @@ chat_completion = client.chat.completions.create(
     temperature = 0.5
 )
 
-dataStore = open("Results\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+dataStore = open("ResultsOriginalPrompts\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
 dataStore.write(chat_completion.choices[0].message.content)
 
 
