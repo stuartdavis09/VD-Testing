@@ -1,6 +1,6 @@
-testingDataset - gpac
-testingCodeNumber - 1452
-patchStatus - vuln
+testingDataset - pjsip
+testingCodeNumber - 27585
+patchStatus - patch
 cweTested - 787
 promptingTechnique - D1
 model - llama3-8b-8192

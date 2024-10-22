@@ -90,22 +90,22 @@ if inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
 
 
 
-# prompts = {
-#     "D1": "A security vulnerability refers to: {0}.\n".format(vulnDesc),
-#     "D2": "You are a security expert that is good at {0} analysis, which refers to {1}.\n".format(vulnName, vulnDesc),
-#     "D3": "You are a security expert that is good at {0} analysis, which refers to {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
-#     "D4": "You are a security expert that is good at {0} analysis, which refers to: {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
-#     "D5": "A security vulnerability refers to: {0}.\nSome vulnerable exemplars are shown in {1}.\nPatched versions of these are shown in {2}.\n".format(vulnDesc, vulnSamples, patchedSamples),
-# }
-
-
 prompts = {
+    "SD1": "A security vulnerability refers to: {0}.\n".format(vulnDesc),
+    "SD2": "You are a security expert that is good at {0} analysis, which refers to {1}.\n".format(vulnName, vulnDesc),
+    "SD3": "You are a security expert that is good at {0} analysis, which refers to {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
+    "SD4": "You are a security expert that is good at {0} analysis, which refers to: {1}.\nSome vulnerable exemplars are shown in {2}.\nPatched versions of these are shown in {3}.\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
+    "SD5": "A security vulnerability refers to: {0}.\nSome vulnerable exemplars are shown in {1}.\nPatched versions of these are shown in {2}.\n".format(vulnDesc, vulnSamples, patchedSamples),
+
+
+    
     "D1": "Does this code contain instances of the security vulnerability known as {0}.\n".format(vulnName),
     "D2": "You are a code security expert who analyzes the given code for the security vulnerability known as {0}.\n\n{1}\n".format(vulnName, vulnDesc),
     "D3": "You are a code security expert who analyzes the given code for the security vulnerability known as {0}.\n\n{1}\n\n{2}\n\n{3}\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
     "D4": "You are a code security expert who analyzes the given code for the security vulnerability known as {0}.\n\n{1}\n\n{2}\n\n{3}\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
     "D5": "Analyze the given code for the security vulnerability known as {0}.\n\n{1}\n\n{2}\n\n{3}\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
 }
+
 ############################################################
 
 

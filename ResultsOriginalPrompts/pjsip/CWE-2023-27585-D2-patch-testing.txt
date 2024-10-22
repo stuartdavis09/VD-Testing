@@ -1,0 +1,13 @@
+Answer: (1) YES
+
+Explanation: 
+
+The code is vulnerable to Out-of-bounds Write vulnerability. 
+
+In the function `parse_rr()`, there is a check for the size of the packet before parsing the RR record. However, in the `parse_query()` function, there is no such check. This can lead to a buffer overflow if the packet size is smaller than expected.
+
+For example, in the `parse_query()` function, the `p` pointer is incremented by `parsed_len` without checking if `p` is within the bounds of the packet. If `parsed_len` is larger than the remaining size of the packet, this can lead to a buffer overflow. 
+
+Additionally, in the `parse_rr()` function, the `p` pointer is incremented by `rr->rdlength` without checking if `p` is within the bounds of the packet. If `rr->rdlength` is larger than the remaining size of the packet, this can also lead to a buffer overflow.
+
+This vulnerability can be exploited by an attacker to write data past the end of the intended buffer, potentially leading to arbitrary code execution.
