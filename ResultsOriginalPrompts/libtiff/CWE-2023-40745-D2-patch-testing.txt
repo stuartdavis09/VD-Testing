@@ -1,0 +1,21 @@
+Answer: (1) YES
+
+Explanation: The code contains a security vulnerability due to an unchecked integer overflow in the `cpStripToTile` function. The function calculates the offset `outskew` and `inskew` as follows:
+
+```c
+out += outskew;
+in += inskew;
+```
+
+The variables `outskew` and `inskew` are calculated as follows:
+
+```c
+iskew = imagew - tilew * spp;
+outskew = tilew * spp - width;
+```
+
+If `imagew` is very large and `tilew * spp` is close to `INT_MAX`, the calculation of `iskew` and `outskew` can result in an integer overflow. This can cause the program to write outside the bounds of the buffer, leading to a buffer overflow vulnerability.
+
+Additionally, the `cpStripToTile` function does not check for buffer overflows when writing to the buffer `obuf`. This can also lead to a buffer overflow vulnerability.
+
+The `limitMalloc` function is used to enforce a maximum allocation size, but this is not sufficient to prevent the integer overflow vulnerability.
