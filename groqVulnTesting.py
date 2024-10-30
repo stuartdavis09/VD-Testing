@@ -29,7 +29,7 @@ vulnLang = {
 
 # INPUTS
 inputs = {}
-with open (r"testingInfo.txt", "r") as file:
+with open (r"vulnTestingInfo.txt", "r") as file:
     for line in file:
         lineList = line.split(' - ')
         
@@ -98,7 +98,7 @@ prompts = {
     "SD5": "A security vulnerability refers to: {0}.\nSome vulnerable exemplars are shown in {1}.\nPatched versions of these are shown in {2}.\n".format(vulnDesc, vulnSamples, patchedSamples),
 
 
-    
+
     "D1": "Does this code contain instances of the security vulnerability known as {0}.\n".format(vulnName),
     "D2": "You are a code security expert who analyzes the given code for the security vulnerability known as {0}.\n\n{1}\n".format(vulnName, vulnDesc),
     "D3": "You are a code security expert who analyzes the given code for the security vulnerability known as {0}.\n\n{1}\n\n{2}\n\n{3}\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
@@ -129,8 +129,18 @@ chat_completion = client.chat.completions.create(
     temperature = 0.5
 )
 
-dataStore = open("ResultsOriginalPrompts\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
-dataStore.write(chat_completion.choices[0].message.content)
+if (inputs["promptingTechnique"] == "SD1" or inputs["promptingTechnique"] == "SD2" or inputs["promptingTechnique"] == "SD3" or inputs["promptingTechnique"] == "SD4" or inputs["promptingTechnique"] == "SD5"):
+    dataStore = open("Results\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+    dataStore.write(chat_completion.choices[0].message.content)
+
+
+
+
+elif (inputs["promptingTechnique"] == "D1" or inputs["promptingTechnique"] == "D2" or inputs["promptingTechnique"] == "D3" or inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5"):
+    dataStore = open("ResultsOriginalPrompts\{0}\CWE-2023-{1}-{2}-{3}-testing.txt".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+    dataStore.write(chat_completion.choices[0].message.content)
+
+
 
 
 print("----------COMPLETED security check-----------")
