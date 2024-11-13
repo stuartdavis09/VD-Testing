@@ -1,6 +1,6 @@
-testingDataset - linux
-testingCodeNumber - 45871
+testingDataset - pjsip
+testingCodeNumber - 27585
 patchStatus - vuln
 cweTested - 787
-promptingTechnique - D1
-model - llama3-8b-8192
+promptingTechnique - SD4
+model - gemma2-9b-it

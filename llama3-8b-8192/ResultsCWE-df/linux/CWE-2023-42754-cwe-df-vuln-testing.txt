@@ -1,0 +1,25 @@
+Here is the output in the specified format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `skb` (struct sk_buff) from various functions
+	* `daddr` (const void *) from `ipv4_neigh_lookup` and `ipv4_confirm_neigh`
+	* `oldflp4` (struct dst_entry *) from `RT_FL_TOS`
+	* `dst` (struct dst_entry *) from various functions
+	* `sk` (struct sock *) from `ip_rt_update_pmtu` and `ip_do_redirect`
+	* `mtu` (u32) from `ip_rt_update_pmtu`
+	* `cookie` (u32) from `ipv4_dst_check`
+2. Sinks:
+	* `__icmp_send` (function) from `ipv4_send_dest_unreach`
+	* `dst_set_expires` (function) from `ipv4_link_failure`
+3. Sanitizers:
+	* `WARN_ON(1)` from `ipv4_cow_metrics`
+4. Unsanitized Data Flows:
+	* (skb, __icmp_send, skb may not be fully sanitized)
+	* (daddr, ipv4_neigh_lookup, daddr is not sanitized)
+	* (oldflp4, RT_FL_TOS, oldflp4 may be NULL)
+5. Final Vulnerability analysis verdict:
+vulnerability: YES
+| vulnerability type: 476 |
+| vulnerability name: NULL Pointer Dereference|
+| explanation: The `RT_FL_TOS` macro may dereference a NULL `oldflp4` pointer, leading to a NULL pointer dereference vulnerability.

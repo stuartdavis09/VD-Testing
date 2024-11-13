@@ -1,0 +1,28 @@
+Here is the output in the specified format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `sock` from `l2cap_sock_alloc_skb_cb`
+	* `chan` from `l2cap_sock_alloc_skb_cb`
+	* `skb` from `l2cap_sock_alloc_skb_cb`
+	* `parent` from `l2cap_sock_init`
+	* `sk` from `l2cap_sock_init`
+	* `net` from `l2cap_sock_alloc`
+	* `sock` from `l2cap_sock_create`
+2. Sinks:
+	* `sk` from `l2cap_sock_destruct`
+	* `chan` from `l2cap_pi(sk)->chan`
+	* `skb` from `skb_queue_purge`
+	* `parent` from `bt_accept_unlink`
+	* `sk` from `sock_orphan`
+	* `sk` from `sk->sk_state_change`
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+	* (sock, chan, chan is not sanitized before being used)
+	* (sk, parent, parent is not sanitized before being used)
+	* (skb, chan, skb is not sanitized before being used)
+5. Final Vulnerability analysis verdict:
+vulnerability: YES
+| vulnerability type: 416 |
+| vulnerability name: Use After Free |
+| explanation: The code uses pointers to `sk` and `chan` without proper sanitization, which can lead to use-after-free vulnerabilities.

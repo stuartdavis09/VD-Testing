@@ -1,0 +1,19 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `txt_in` (FILE pointer)
+	* `unicode_type` (s32)
+	* `szLine` (char pointer)
+2. Sinks:
+	* `szLine` (char pointer)
+	* `sOK` (char pointer)
+3. Sanitizers:
+	* `gf_utf8_wcstombs` (utf8 to multibyte string conversion)
+4. Unsanitized Data Flows:
+	* (txt_in, szLine, no sanitization on file input)
+	* (unicode_type, szLine, no sanitization on input type)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write |
+| explanation: The function `gf_text_get_utf8_line` reads data from the file `txt_in` and stores it in the buffer `szLine`. The buffer size is not checked, which allows for potential out-of-bounds writes.

@@ -1,0 +1,20 @@
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `skb` (struct sk_buff) from various functions such as `hash_netportnet4_do_data_match`, `hash_netportnet6_do_data_match`, `hash_netportnet4_uadt`, and `hash_netportnet6_uadt`.
+	* `tb` (struct nlattr*) from `hash_netportnet4_uadt` and `hash_netportnet6_uadt`.
+	* `opt` (struct ip_set_adt_opt*) from `hash_netportnet4_uadt` and `hash_netportnet6_uadt`.
+	* `par` (struct xt_action_param*) from `hash_netportnet4_kadt` and `hash_netportnet6_kadt`.
+2. Sinks:
+	* `set` (struct ip_set*) in `hash_netportnet4_kadt` and `hash_netportnet6_kadt`.
+	* `ext` (struct ip_set_ext*) in `hash_netportnet4_do_data_match`, `hash_netportnet6_do_data_match`, `hash_netportnet4_uadt`, and `hash_netportnet6_uadt`.
+	* `flags` (u32) in `hash_netportnet4_do_data_match`, `hash_netportnet6_do_data_match`, `hash_netportnet4_uadt`, and `hash_netportnet6_uadt`.
+3. Sanitizers:
+	* `ip_set_get_ipaddr4` and `ip_set_get_ipaddr6` in `hash_netportnet4_uadt` and `hash_netportnet6_uadt` respectively.
+	* `ip_set_get_ip6_port` in `hash_netportnet6_uadt`.
+4. Unsanitized Data Flows:
+	* `(skb, opt->flags & IPSET_DIM_TWO_SRC, &e.port, &e.proto)` in `hash_netportnet4_do_data_match` and `hash_netportnet6_do_data_match`. This flow is unsanitized because `skb` and `opt` are not sanitized.
+	* `(tb[IPSET_ATTR_IP_TO] || tb[IPSET_ATTR_IP2_TO])` in `hash_netportnet4_uadt` and `hash_netportnet6_uadt`. This flow is unsanitized because `tb` is not sanitized.
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound |
+| explanation: The code snippet contains several instances of unsanitized data flows, which can lead to integer overflow or wraparound vulnerabilities. For example, in `hash_netportnet4_do_data_match` and `hash_netportnet6_do_data_match`, the `port` and `proto` fields are not sanitized before being used in arithmetic operations. Similarly, in `hash_netportnet4_uadt` and `hash_netportnet6_uadt`, the `tb` array is not sanitized before being used to access and manipulate data. These unsanitized data flows can lead to integer overflow or wraparound vulnerabilities, which can be exploited by an attacker to gain unauthorized access or manipulate the system.

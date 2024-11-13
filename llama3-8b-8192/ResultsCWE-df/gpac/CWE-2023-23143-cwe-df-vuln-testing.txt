@@ -1,0 +1,44 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources: 
+	* `GF_BitStream *bs`
+	* `AVCState *avc`
+	* `Bool svc_idr_flag`
+	* `AVCSliceInfo *si`
+2. Sinks: 
+	* `si->slice_type`
+	* `si->pps`
+	* `si->sps`
+	* `si->frame_num`
+	* `si->field_pic_flag`
+	* `si->bottom_field_flag`
+	* `si->idr_pic_id`
+	* `si->poc_lsb`
+	* `si->delta_poc_bottom`
+	* `si->delta_poc[0]`
+	* `si->delta_poc[1]`
+	* `si->redundant_pic_cnt`
+	* `si->direct_spatial_mv_pred_flag`
+	* `si->num_ref_idx_l0_active_minus1`
+	* `si->num_ref_idx_l1_active_minus1`
+	* `si->nal_unit_type`
+	* `si->nal_ref_idc`
+	* `si->slice_qp_delta`
+	* `si->sp_for_switch_flag`
+	* `si->slice_qs_delta`
+	* `si->slice_alpha_c0_offset_div2`
+	* `si->slice_beta_offset_div2`
+	* `si->slice_group_change_cycle`
+3. Sanitizers: 
+	* `gf_bs_read_ue_log`
+	* `gf_bs_read_int_log`
+	* `gf_bs_read_se_log`
+4. Unsanitized Data Flows: 
+	* (GF_BitStream *bs, si->slice_type, potential buffer overflow)
+	* (GF_BitStream *bs, si->pps, potential buffer overflow)
+	* (GF_BitStream *bs, si->sps, potential buffer overflow)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write |
+| explanation: The code does not properly sanitize the input data from the BitStream, which could lead to an out-of-bounds write vulnerability.

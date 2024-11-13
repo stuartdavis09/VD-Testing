@@ -1,0 +1,20 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `txt_in` (FILE pointer)
+	* `unicode_type` (s32)
+2. Sinks:
+	* `szLine` (char*)
+	* `szLineConv` (char[2048])
+3. Sanitizers:
+	* `gf_fgets` (checks for NULL)
+	* `gf_utf8_wcstombs` (checks for GF_UTF8_FAIL)
+4. Unsanitized Data Flows:
+	* (`txt_in`, `szLine`, unsanitized input from file)
+	* (`unicode_type`, `szLine`, unsanitized input from variable)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write |
+| explanation: The code snippet contains several unsanitized data flows, including the input from the file `txt_in` and the variable `unicode_type`. This could lead to potential out-of-bounds writes if the input data is not properly validated.

@@ -1,0 +1,21 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `igb_pci_tbl` (array of `struct pci_device_id`)
+	* `igb_info_tbl` (array of `const struct e1000_info *`)
+	* `debug` (module parameter)
+	* `max_vfs` (module parameter)
+2. Sinks:
+	* `igb_pci_tbl` (array of `struct pci_device_id`)
+	* `igb_info_tbl` (array of `const struct e1000_info *`)
+	* `debug` (module parameter)
+	* `max_vfs` (module parameter)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+	* (igb_pci_tbl, igb_pci_tbl, igb_pci_tbl is not sanitized)
+	* (igb_info_tbl, igb_info_tbl, igb_info_tbl is not sanitized)
+	* (debug, debug, debug is not sanitized)
+	* (max_vfs, max_vfs, max_vfs is not sanitized)
+5. Final Vulnerability analysis verdict:
+vulnerability: NO

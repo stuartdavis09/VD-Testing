@@ -1,0 +1,27 @@
+Here is the output:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `gf_bifs_dec_qp14_get_bits` function
+	* `gf_bifs_get_aq_info` function
+	* `gf_bs_read_int` function
+	* `gf_node_get_tag` function
+	* `gf_list_insert` function
+	* `gf_list_get` function
+	* `gf_list_rem` function
+	* `gf_node_unregister` function
+2. Sinks:
+	* `Q_DecFloat` function
+	* `Q_DecInt` function
+	* `Q_DecNormal` function
+	* `Q_DecRotation` function
+3. Sanitizers:
+	* `gf_bifs_dec_qp14_get_bits` function (sanitizes the `NbBits` value)
+	* `Q_IsTypeOn` function (sanitizes the `NbBits` value)
+4. Unsanitized Data Flows:
+	* (source: `gf_bifs_dec_qp14_get_bits` function, sink: `Q_DecFloat` function, why this flow could be vulnerable: the `NbBits` value is not sanitized, which could lead to an integer overflow or wraparound)
+5. Final Vulnerability analysis verdict:
+vulnerability: YES
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound |
+| explanation: The code snippet contains several functions that read integer values from a bitstream and use them to calculate the size of an array or the number of bits to shift. These values are not sanitized, which could lead to an integer overflow or wraparound.

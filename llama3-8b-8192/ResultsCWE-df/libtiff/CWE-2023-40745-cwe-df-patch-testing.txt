@@ -1,0 +1,17 @@
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `argv` from the `main` function
+	* `in` and `out` TIFF files from the `tiffcp` function
+	* `imageCursor` from the `main` function
+2. Sinks:
+	* `out` TIFF file from the `tiffcp` function
+	* `buf` buffer from the `readSeparateTilesIntoBuffer` and `writeBufferToContigTiles` functions
+3. Sanitizers:
+	* `limitMalloc` function to enforce a maximum allocation size
+4. Unsanitized Data Flows:
+	* (source: `argv`, sink: `out`, why this flow could be vulnerable: command-line arguments can be untrusted)
+	* (source: `in`, sink: `buf`, why this flow could be vulnerable: input files can contain malicious data)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound |
+| explanation: The code contains a potential integer overflow or wraparound vulnerability in the `cpStripToTile` function. The `iskew` variable is calculated as `imagew - tilew * spp`, which can lead to an integer overflow if `imagew` is large and `tilew` and `spp` are small. This could result in incorrect calculations and potentially lead to a buffer overflow.

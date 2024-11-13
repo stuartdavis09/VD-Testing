@@ -1,0 +1,35 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources: 
+   1. `GF_BitStream *bs`
+   2. `AVCState *avc`
+   3. `Bool svc_idr_flag`
+   4. `AVCSliceInfo *si`
+2. Sinks: 
+   1. `gf_bs_read_ue_log(bs, ...)` (unsanitized)
+   2. `gf_bs_read_int_log(bs, ...)` (unsanitized)
+   3. `gf_bs_read_se_log(bs, ...)` (unsanitized)
+   4. `gf_bs_read_ue_log(bs, "redundant_pic_cnt")` (unsanitized)
+   5. `gf_bs_read_ue_log(bs, "num_ref_idx_l0_active_minus1")` (unsanitized)
+   6. `gf_bs_read_ue_log(bs, "num_ref_idx_l1_active_minus1")` (unsanitized)
+   7. `avc_pred_weight_table(bs, ...)` (unsanitized)
+   8. `dec_ref_pic_marking(bs, ...)` (unsanitized)
+   9. `gf_bs_read_ue_log(bs, "cabac_init_idc")` (unsanitized)
+   10. `gf_bs_read_se(bs)` (unsanitized)
+   11. `gf_bs_read_int_log(bs, 1, "sp_for_switch_flag")` (unsanitized)
+   12. `gf_bs_read_se_log(bs, "slice_qs_delta")` (unsanitized)
+   13. `gf_bs_read_ue_log(bs, "disable_deblocking_filter_idc")` (unsanitized)
+   14. `gf_bs_read_se_log(bs, "slice_alpha_c0_offset_div2")` (unsanitized)
+   15. `gf_bs_read_se_log(bs, "slice_beta_offset_div2")` (unsanitized)
+   16. `gf_bs_read_int_log(bs, ...)` (unsanitized)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+   1. (GF_BitStream *bs, gf_bs_read_ue_log(bs, ...), input data from unknown source is written to the output without sanitization)
+   2. (GF_BitStream *bs, gf_bs_read_int_log(bs, ...), input data from unknown source is written to the output without sanitization)
+   3. (GF_BitStream *bs, gf_bs_read_se_log(bs, ...), input data from unknown source is written to the output without sanitization)
+   ...
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write |
+| explanation: The code does not properly validate the input data from unknown sources, allowing potential out-of-bounds writes to occur.
