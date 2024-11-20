@@ -2,5 +2,5 @@ testingDataset - linux
 testingCodeNumber - 45871
 patchStatus - vuln
 cweTested - 787
-promptingTechnique - cwe-df
-model - gemma2-9b-it
+promptingTechnique - OP
+model - llama3-8b-8192

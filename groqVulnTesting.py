@@ -26,17 +26,17 @@ vulnLang = {
 }
 
 dataset = {
-    # "gpac": {
-    #     "1452":"787",
-    #     "3012":"476",
-    #     "23143":"787",
-    #     "23144":"190"
-    # },
+    "gpac": {
+        "1452":"787",
+        "3012":"476",
+        "23143":"787",
+        "23144":"190"
+    },
     "libtiff": {
-        # "2908":"476",
-        # "3316":"476",
-        # "26966":"787",
-        # "40745":"190",
+        "2908":"476",
+        "3316":"476",
+        "26966":"787",
+        "40745":"190",
         "41175":"190"
     },
     "linux": {
@@ -71,6 +71,39 @@ with open (r"vulnTestingInfo.txt", "r") as file:
         inputs[lineList[0]] = lineList[1].removesuffix("\n")
 
 print(inputs)
+
+
+
+
+
+
+def savePrompt(systemPrompt, userPrompt):
+    if (inputs["promptingTechnique"] == "SD1" or inputs["promptingTechnique"] == "SD2" or inputs["promptingTechnique"] == "SD3" or inputs["promptingTechnique"] == "SD4" or inputs["promptingTechnique"] == "SD5"):
+        dataStore = open("{0}\Results\{1}\Prompts\{2}-{3}-{4}-PROMPT.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+        dataStore.write("System:\n" + systemPrompt + "\n\n\nUser:\n" + userPrompt)
+
+    elif inputs["promptingTechnique"] == "D1" or inputs["promptingTechnique"] == "D2" or inputs["promptingTechnique"] == "D3" or inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
+        dataStore = open("{0}\ResultsSecLLMHolmesPrompts\{1}\Prompts\{2}-{3}-{4}-PROMPT.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+        dataStore.write("System:\n" + systemPrompt + "\n\n\nUser:\n" + userPrompt)
+
+    elif inputs["promptingTechnique"] == "cwe-df":
+        dataStore = open("{0}\ResultsCWE-DF\{1}\Prompts\{2}-{3}-{4}-PROMPT.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+        dataStore.write("System:\n" + systemPrompt + "\n\n\nUser:\n" + userPrompt)
+
+    elif inputs["promptingTechnique"] == "OP":
+        dataStore = open("{0}\ResultsOP\{1}\Prompts\{2}-{3}-{4}-PROMPT.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+        dataStore.write("System:\n" + systemPrompt + "\n\n\nUser:\n" + userPrompt)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -158,50 +191,58 @@ def chatBot():
     ############################################################
 
 
-    chat_completion = client.chat.completions.create(
-        messages = [
-            {
-                "role" : "system",
-                "content" : prompts[inputs["promptingTechnique"]],
-            },
-            {
-                "role" : "user",
-                "content" : promptTemplate,
-            },
-        ],
+    # chat_completion = client.chat.completions.create(
+    #     messages = [
+    #         {
+    #             "role" : "system",
+    #             "content" : prompts[inputs["promptingTechnique"]],
+    #         },
+    #         {
+    #             "role" : "user",
+    #             "content" : promptTemplate,
+    #         },
+    #     ],
 
-        model=inputs["model"],
-        temperature = 0.5
-    )
+    #     model=inputs["model"],
+    #     temperature = 0.5
+    # )
 
-    if (inputs["promptingTechnique"] == "SD1" or inputs["promptingTechnique"] == "SD2" or inputs["promptingTechnique"] == "SD3" or inputs["promptingTechnique"] == "SD4" or inputs["promptingTechnique"] == "SD5"):
-        dataStore = open("{0}\Results\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
-        dataStore.write(chat_completion.choices[0].message.content)
-
-
-
-
-    elif inputs["promptingTechnique"] == "D1" or inputs["promptingTechnique"] == "D2" or inputs["promptingTechnique"] == "D3" or inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
-        dataStore = open("{0}\ResultsSecLLMHolmesPrompts\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
-        dataStore.write(chat_completion.choices[0].message.content)
-
-
-    elif inputs["promptingTechnique"] == "cwe-df":
-        dataStore = open("{0}\ResultsCWE-df\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
-        dataStore.write(chat_completion.choices[0].message.content)
-
-
-    elif inputs["promptingTechnique"] == "OP":
-        dataStore = open("{0}\ResultsOP\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
-        dataStore.write(chat_completion.choices[0].message.content)
+    # if (inputs["promptingTechnique"] == "SD1" or inputs["promptingTechnique"] == "SD2" or inputs["promptingTechnique"] == "SD3" or inputs["promptingTechnique"] == "SD4" or inputs["promptingTechnique"] == "SD5"):
+    #     dataStore = open("{0}\Results\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+    #     dataStore.write(chat_completion.choices[0].message.content)
 
 
 
 
+    # elif inputs["promptingTechnique"] == "D1" or inputs["promptingTechnique"] == "D2" or inputs["promptingTechnique"] == "D3" or inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
+    #     dataStore = open("{0}\ResultsSecLLMHolmesPrompts\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+    #     dataStore.write(chat_completion.choices[0].message.content)
 
+
+    # elif inputs["promptingTechnique"] == "cwe-df":
+    #     dataStore = open("{0}\ResultsCWE-df\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+    #     dataStore.write(chat_completion.choices[0].message.content)
+
+
+    # elif inputs["promptingTechnique"] == "OP":
+    #     dataStore = open("{0}\ResultsOP\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+    #     dataStore.write(chat_completion.choices[0].message.content)
+
+    
+    savePrompt(prompts[inputs["promptingTechnique"]], promptTemplate)
 
 
     print("----------COMPLETED security check-----------")
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -215,10 +256,10 @@ for testingDataset in dataset.keys():
 
         inputs["patchStatus"] = "patch"
         chatBot()
-        time.sleep(20.0)
+        # time.sleep(20.0)
 
         inputs["patchStatus"] = "vuln"
         chatBot()
-        time.sleep(20.0)
+        # time.sleep(20.0)
 
 print("\n\n\n------- ALL IS DONE! --------")
