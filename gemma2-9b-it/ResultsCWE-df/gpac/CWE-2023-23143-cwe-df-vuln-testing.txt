@@ -1,0 +1,33 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. `bs` (GF_BitStream)
+2. Sinks: 
+    1. `pps_id` (s32)
+    2. `si->pps` (AVC_PPS*)
+    3. `si->sps` (AVC_SPS*)
+    4. `avc->sps_active_idx` (s8)
+    5. `avc->pps_active_idx` (s8)
+    6. `si->frame_num` (s32)
+    7. `si->field_pic_flag` (Bool)
+    8. `si->bottom_field_flag` (Bool)
+    9. `si->idr_pic_id` (u32)
+    10. `si->poc_lsb` (s32)
+    11. `si->delta_poc_bottom` (s32)
+    12. `si->delta_poc[0]` (s32)
+    13. `si->delta_poc[1]` (s32)
+    14. `si->redundant_pic_cnt` (u32)
+    15. `num_ref_idx_l0_active_minus1` (s32)
+    16. `num_ref_idx_l1_active_minus1` (s32)
+    17. `si->slice_type` (u32)
+    18. `si->nal_unit_type` (u32)
+    19. `si->nal_ref_idc` (u32)
+    20. `si->cabac_init_idc` (u32)
+    21. `slice_qp_delta` (s32)
+    22. `si->slice_qs_delta` (s32)
+    23. `disable_deblocking_filter_idc` (u32)
+    24. `slice_group_change_cycle` (u32)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows: 
+    1. (bs, si->pps_id,  The value read from `bs` is directly used to index into the `avc->pps` array, which could lead to an out-of-bounds access if `pps_id` is not within the valid range [0, 255].)
+    2. (bs, si->sps_id, The value read from `bs` is directly used to index into the `avc->sps` array, which could lead to an out-of-bounds access if `sps_id` is not within the valid range [0, 31].)
+5. Final Vulnerability analysis verdict: vulnerability: YES

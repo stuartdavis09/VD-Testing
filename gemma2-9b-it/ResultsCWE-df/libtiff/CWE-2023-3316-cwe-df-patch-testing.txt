@@ -1,0 +1,47 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. tif->tif_mode
+    2. tif->tif_cleanup
+    3. tif->tif_clientinfo
+    4. tif->tif_rawdata
+    5. tif->tif_flags
+    6. tif->tif_base
+    7. tif->tif_size
+    8. tif->tif_fields
+    9. tif->tif_nfields
+    10. tif->tif_fieldscompat
+    11. tif->tif_nfieldscompat
+    12. tif->tif_map_dir_offset_to_number
+    13. tif->tif_map_dir_number_to_offset
+14. tif
+2. Sinks: 
+    1. TIFFFlush(tif)
+    2. (*tif->tif_cleanup)(tif)
+    3. TIFFFreeDirectory(tif)
+    4. _TIFFCleanupIFDOffsetAndNumberMaps(tif)
+    5. _TIFFfreeExt(tif, psLink->name)
+    6. _TIFFfreeExt(tif, psLink)
+    7. _TIFFfreeExt(tif, tif->tif_rawdata)
+    8. TIFFUnmapFileContents(tif, tif->tif_base, (toff_t)tif->tif_size)
+    9. _TIFFfreeExt(tif, fld->field_name)
+    10. _TIFFfreeExt(tif, fld)
+    11. _TIFFfreeExt(tif, tif->tif_fields)
+    12. _TIFFfreeExt(tif, tif->tif_fieldscompat[i].fields)
+    13. _TIFFfreeExt(tif, tif->tif_fieldscompat)
+    14. TIFFHashSetDestroy(tif->tif_map_dir_offset_to_number)
+    15. TIFFHashSetDestroy(tif->tif_map_dir_number_to_offset)
+    16. (*closeproc)(fd)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+    1. (tif->tif_clientinfo, _TIFFfreeExt(tif, psLink->name),  External API call `_TIFFfreeExt` without input sanitization)
+    2. (tif->tif_clientinfo, _TIFFfreeExt(tif, psLink), External API call `_TIFFfreeExt` without input sanitization)
+    3. (tif->tif_fields[i], _TIFFfreeExt(tif, fld->field_name), External API call `_TIFFfreeExt` without input sanitization)
+    4. (tif->tif_fields[i], _TIFFfreeExt(tif, fld), External API call `_TIFFfreeExt` without input sanitization)
+    5. (tif->tif_fieldscompat[i].fields, _TIFFfreeExt(tif, tif->tif_fieldscompat[i].fields), External API call `_TIFFfreeExt` without input sanitization)
+    6. (tif->tif_fieldscompat, _TIFFfreeExt(tif, tif->tif_fieldscompat), External API call `_TIFFfreeExt` without input sanitization)
+    7. (tif, _TIFFfreeExt(NULL, tif), External API call `_TIFFfreeExt` without input sanitization)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+
+
+
+

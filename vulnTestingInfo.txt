@@ -1,6 +1,6 @@
-testingDataset - pjsip
-testingCodeNumber - 27585
+testingDataset - linux
+testingCodeNumber - 45871
 patchStatus - vuln
 cweTested - 787
-promptingTechnique - SD4
+promptingTechnique - cwe-df
 model - gemma2-9b-it

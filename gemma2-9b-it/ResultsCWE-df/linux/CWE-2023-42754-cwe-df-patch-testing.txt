@@ -1,0 +1,29 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1.  `skb->dev` in `ipv4_link_failure`
+    2.  `skb_rtable(skb)` in `ipv4_link_failure`
+    3.  `skb` in `ipv4_link_failure`
+    4.  `ip_hdr(skb)` in `ipv4_link_failure`
+    5.  `ip_hdr(skb)->version` in `ipv4_link_failure`
+    6.  `ip_hdr(skb)->ihl` in `ipv4_link_failure`
+    7.  `skb` in `ipv4_send_dest_unreach`
+    8.  `skb->dev` in `ipv4_send_dest_unreach`
+    9.  `skb_rtable(skb)` in `ipv4_send_dest_unreach`
+    10. `ip_hdr(skb)` in `ipv4_send_dest_unreach`
+    11. `ip_hdr(skb)->ihl` in `ipv4_send_dest_unreach`
+    12. `ip_hdr(skb)->ihl * 4` in `ipv4_send_dest_unreach`
+    13. `skb` in `ipv4_send_dest_unreach`
+2. Sinks: 
+    1.  `dst_set_expires(&rt->dst, 0)` in `ipv4_link_failure`
+    2.  `__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt)` in `ipv4_send_dest_unreach`
+3. Sanitizers: 
+    N/A
+4. Unsanitized Data Flows: 
+    1. (skb->dev, dst_set_expires(&rt->dst, 0),  `skb->dev` is potentially untrusted input as it comes from the network and could be manipulated by an attacker.  `dst_set_expires`  is a function that modifies the expiration time of a route entry. An attacker could potentially craft malicious input to `skb->dev` to cause a denial of service by manipulating the expiration time of a route entry.)
+    2. (skb_rtable(skb), dst_set_expires(&rt->dst, 0),  `skb_rtable(skb)` is potentially untrusted input as it comes from the network and could be manipulated by an attacker.  `dst_set_expires`  is a function that modifies the expiration time of a route entry. An attacker could potentially craft malicious input to `skb_rtable(skb)` to cause a denial of service by manipulating the expiration time of a route entry.)
+    3. (ip_hdr(skb)->version, __icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt), ip_hdr(skb)->version could be manipulated by an attacker to cause a buffer overflow or other security vulnerability.  `__icmp_send` is a function that sends an ICMP message. An attacker could potentially craft malicious input to `ip_hdr(skb)->version` to cause a denial of service or other security vulnerability.)
+    4. (ip_hdr(skb)->ihl, __icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt), ip_hdr(skb)->ihl could be manipulated by an attacker to cause a buffer overflow or other security vulnerability.  `__icmp_send` is a function that sends an ICMP message. An attacker could potentially craft malicious input to `ip_hdr(skb)->ihl` to cause a denial of service or other security vulnerability.)
+    5. (ip_hdr(skb)->ihl * 4, __icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt), ip_hdr(skb)->ihl * 4 could be manipulated by an attacker to cause a buffer overflow or other security vulnerability.  `__icmp_send` is a function that sends an ICMP message. An attacker could potentially craft malicious input to `ip_hdr(skb)->ihl * 4` to cause a denial of service or other security vulnerability.)
+5. Final Vulnerability analysis verdict: vulnerability: YES 
+
+

@@ -1,287 +1,218 @@
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    the
-    
-    
-    
+ 
     
 
-    
-    
-    
-    the
-    
-    
-    the
-    
-    
-    
-    the
-    
-    the
-    
-    
-    
-    the
-    
-    
+    rec->ptr = (ptr_ptr,
+}
+    ptr,
+    ptr_ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
 
-    
-    
-    
-    the
-    
-    
-    
-    
-    the
-    
-    
-    the
-    
-    the
-    the
-    
-    the
-    
-    the
-    
-    
-    the
-    
-    
-    the
-    the
-    the
-    
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
-    the
+
+The following code
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+
+
+            
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+
+            
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+
+
+            
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+
+            
+    ptr,
+            ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+
+            
+}
+}
+            ptr,
+    ptr,
+            ptr,
+    ptr,
+    ptr,
+            ptr,
+    ptr,
+    ptr,
+    ptr,
+            ptr,
+    ptr,
+    ptr,
+            ptr,
+            ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+
+            ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+            ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+    ptr,
+
+
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr,
+            ptr

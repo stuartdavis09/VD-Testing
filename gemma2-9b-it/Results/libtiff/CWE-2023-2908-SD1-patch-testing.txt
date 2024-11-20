@@ -1,3 +1,4 @@
+```python:
     
     
     
@@ -8,297 +9,438 @@
     
     
     
-    *
-    
-    *
     
     
-    void
     
-    void
-    *
+    
+    
+    
     
 
-I
+The code
     
-    
-    void
-    
-    void
-    void
-    
-    void
-    void
-    void
-    
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
 
-    void
-    void
-    void
-    void
-    void
+```
+```
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+```
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
-    void
+This code
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+This code
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+This code
+    
+    
+    
+    
+    
+    
+    
+    
+
+```
+
+This is
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+This code
+    
+    
+    
+    
+    
+
+This code
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+This code
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

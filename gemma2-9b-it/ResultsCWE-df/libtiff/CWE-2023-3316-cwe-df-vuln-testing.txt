@@ -1,0 +1,33 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. tif->tif_clientinfo (in the TIFFCleanup function)
+    2. tif->tif_rawdata (in the TIFFCleanup function)
+    3. tif->tif_fields (in the TIFFCleanup function)
+    4. tif->tif_fieldscompat (in the TIFFCleanup function)
+    5. tif->tif_map_dir_offset_to_number (in the _TIFFCleanupIFDOffsetAndNumberMaps function)
+    6. tif->tif_map_dir_number_to_offset (in the _TIFFCleanupIFDOffsetAndNumberMaps function)
+2. Sinks: 
+    1. _TIFFfreeExt(tif, psLink->name) (in the TIFFCleanup function)
+    2. _TIFFfreeExt(tif, psLink) (in the TIFFCleanup function)
+    3. _TIFFfreeExt(tif, tif->tif_rawdata) (in the TIFFCleanup function)
+    4. TIFFUnmapFileContents(tif, tif->tif_base, (toff_t)tif->tif_size) (in the TIFFCleanup function)
+    5. _TIFFfreeExt(tif, fld->field_name) (in the TIFFCleanup function)
+    6. _TIFFfreeExt(tif, fld) (in the TIFFCleanup function)
+    7. _TIFFfreeExt(tif, tif->tif_fields) (in the TIFFCleanup function)
+    8. _TIFFfreeExt(tif, tif->tif_fieldscompat) (in the TIFFCleanup function)
+    9. TIFFHashSetDestroy(tif->tif_map_dir_offset_to_number) (in the _TIFFCleanupIFDOffsetAndNumberMaps function)
+    10. TIFFHashSetDestroy(tif->tif_map_dir_number_to_offset) (in the _TIFFCleanupIFDOffsetAndNumberMaps function)
+    11. (*closeproc)(fd) (in the TIFFClose function)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+    1. (tif->tif_clientinfo, _TIFFfreeExt(tif, psLink->name), Could be vulnerable if psLink->name is NULL)
+    2. (tif->tif_clientinfo, _TIFFfreeExt(tif, psLink), Could be vulnerable if psLink is NULL)
+    3. (tif->tif_rawdata, _TIFFfreeExt(tif, tif->tif_rawdata), Could be vulnerable if tif->tif_rawdata is NULL)
+    4. (tif->tif_fields, _TIFFfreeExt(tif, tif->tif_fields), Could be vulnerable if tif->tif_fields is NULL)
+    5. (tif->tif_fieldscompat, _TIFFfreeExt(tif, tif->tif_fieldscompat), Could be vulnerable if tif->tif_fieldscompat is NULL)
+    6. (tif->tif_map_dir_offset_to_number, TIFFHashSetDestroy(tif->tif_map_dir_offset_to_number), Could be vulnerable if tif->tif_map_dir_offset_to_number is NULL)
+    7. (tif->tif_map_dir_number_to_offset, TIFFHashSetDestroy(tif->tif_map_dir_number_to_offset), Could be vulnerable if tif->tif_map_dir_number_to_offset is NULL)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+
+
+

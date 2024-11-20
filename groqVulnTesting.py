@@ -1,5 +1,6 @@
 from groq import Groq
 from cwe import Database
+import time
 
 db = Database()
 
@@ -25,17 +26,17 @@ vulnLang = {
 }
 
 dataset = {
-    "gpac": {
-        "1452":"787",
-        "3012":"476",
-        "23143":"787",
-        "23144":"190"
-    },
+    # "gpac": {
+    #     "1452":"787",
+    #     "3012":"476",
+    #     "23143":"787",
+    #     "23144":"190"
+    # },
     "libtiff": {
-        "2908":"476",
-        "3316":"476",
-        "26966":"787",
-        "40745":"190",
+        # "2908":"476",
+        # "3316":"476",
+        # "26966":"787",
+        # "40745":"190",
         "41175":"190"
     },
     "linux": {
@@ -76,6 +77,9 @@ print(inputs)
 
 def chatBot():
     file_path = r"SecLLMHolmes\datasets\real-world\{0}\CVE-2023-{1}\{2}.c".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["patchStatus"])
+
+    if inputs["promptingTechnique"] == "OP":
+        file_path = r"FunctionOnlyDataset\{0}\CVE-2023-{1}\{2}.c".format(inputs["testingDataset"], inputs["testingCodeNumber"], inputs["patchStatus"])
     ###############################################################
     with open(file_path, "r") as file:
         code = file.read()
@@ -121,8 +125,12 @@ def chatBot():
 
     if inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
         promptTemplate += "Let's think step-by-step.\n"
+
     elif inputs["promptingTechnique"] == "cwe-df":
         promptTemplate = " Is the following code snippet prone to {0}\n{1}?".format(vulnName, code)
+    
+    elif inputs["promptingTechnique"] == "OP":
+        promptTemplate = "Please analyze the following code for {0}:\n\n--------------- START OF CODE ---------------\n{1}\n--------------- END OF CODE ---------------\n\nCarefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.\nLet’s think step-by-step".format(vulnName, code)
         
 
 
@@ -142,7 +150,9 @@ def chatBot():
         "D5": "Analyze the given code for the security vulnerability known as {0}.\n\n{1}\n\n{2}\n\n{3}\n".format(vulnName, vulnDesc, vulnSamples, patchedSamples),
 
 
-        "cwe-df": "You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.\nPlease provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.\n<OUTPUT FORMAT>\nData flow analysis of the given code snippet:\n1. Sources: <numbered list of input sources>\n2. Sinks: <numbered list of output sinks>\n3. Sanitizers: <numbered list of sanitizers, if any>\n4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>\n5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>\n| vulnerability type: {0} |\n| vulnerability name: {1}|\n| explanation: <explanation for prediction>|".format(inputs["cweTested"], vulnName)
+        "cwe-df": "You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.\nPlease provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.\n<OUTPUT FORMAT>\nData flow analysis of the given code snippet:\n1. Sources: <numbered list of input sources>\n2. Sinks: <numbered list of output sinks>\n3. Sanitizers: <numbered list of sanitizers, if any>\n4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>\n5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>\n| vulnerability type: {0} |\n| vulnerability name: {1}|\n| explanation: <explanation for prediction>|".format(inputs["cweTested"], vulnName),
+    
+        "OP": "You are a security expert in detecting {0}.\n{1}\nGive your answer in the following structure:\n1. Vulnerability analysis: <YES, THERE IS A VULNERABILITY or NO, THERE IS NO VULNERABILITY>\n2. Explanation: <Leave as N/A if there is no vulnerability>\n| CWE Name: <Name of Vulnerability> |".format(vulnName, vulnDesc)
     }
 
     ############################################################
@@ -171,14 +181,21 @@ def chatBot():
 
 
 
-    elif (inputs["promptingTechnique"] == "D1" or inputs["promptingTechnique"] == "D2" or inputs["promptingTechnique"] == "D3" or inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5"):
+    elif inputs["promptingTechnique"] == "D1" or inputs["promptingTechnique"] == "D2" or inputs["promptingTechnique"] == "D3" or inputs["promptingTechnique"] == "D4" or inputs["promptingTechnique"] == "D5":
         dataStore = open("{0}\ResultsSecLLMHolmesPrompts\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
         dataStore.write(chat_completion.choices[0].message.content)
 
 
-    elif (inputs["promptingTechnique"] == "cwe-df"):
+    elif inputs["promptingTechnique"] == "cwe-df":
         dataStore = open("{0}\ResultsCWE-df\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
         dataStore.write(chat_completion.choices[0].message.content)
+
+
+    elif inputs["promptingTechnique"] == "OP":
+        dataStore = open("{0}\ResultsOP\{1}\CWE-2023-{2}-{3}-{4}-testing.txt".format(inputs["model"], inputs["testingDataset"], inputs["testingCodeNumber"], inputs["promptingTechnique"], inputs["patchStatus"]), "x")
+        dataStore.write(chat_completion.choices[0].message.content)
+
+
 
 
 
@@ -198,8 +215,10 @@ for testingDataset in dataset.keys():
 
         inputs["patchStatus"] = "patch"
         chatBot()
+        time.sleep(20.0)
 
         inputs["patchStatus"] = "vuln"
         chatBot()
+        time.sleep(20.0)
 
 print("\n\n\n------- ALL IS DONE! --------")

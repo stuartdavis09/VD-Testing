@@ -1,0 +1,10 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation:
+The vulnerability is an Out-of-bounds Write in the function `gf_text_get_utf8_line`. The issue lies in the following lines:
+```
+sptr = (u16 *)szLine;
+i = gf_utf8_wcstombs(szLineConv, 2048, (const unsigned short **) &sptr);
+```
+The `gf_utf8_wcstombs` function is called with a pointer to `szLine` as the destination buffer, which is a character array of size `lineSize`. However, the function does not check if the buffer is large enough to hold the converted string. If the input string is longer than `lineSize`, the function will write data beyond the end of the buffer, leading to an Out-of-bounds Write.
+
+| CWE Name: CWE-787 |

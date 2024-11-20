@@ -1,101 +1,227 @@
-;
-    the
-    rec->
-    rec->name = the
-    rec->dns
-    rec->
-    rec->name = (
-    rec->name =
-    rec->name = the
-    rec->name = (
-    rec->name =
-    rec->name = (
-
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name = the
-    rec->name =
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            the
+            

@@ -1,0 +1,4 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The vulnerability is due to the potential for integer overflow in the calculation of `iskew`. The value of `iskew` is calculated as `imagew - tilew * spp`, where `imagew` is a `uint32_t` and `tilew` and `spp` are both `int`. If the value of `imagew` is large enough, the subtraction could cause an integer overflow, resulting in a negative value for `iskew`. This could then cause problems when the value of `iskew` is used later in the code.
+
+CWE Name: CWE-190: Integer Overflow or Wraparound

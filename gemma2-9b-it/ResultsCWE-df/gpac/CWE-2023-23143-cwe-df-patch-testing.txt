@@ -1,0 +1,43 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. `bs` (GF_BitStream)
+2. Sinks: 
+    1. `pps_id`
+    2. `si->pps`
+    3. `si->sps`
+    4. `avc->sps_active_idx`
+    5. `avc->pps_active_idx`
+    6. `si->frame_num`
+    7. `si->field_pic_flag`
+    8. `si->bottom_field_flag`
+    9. `si->idr_pic_id`
+    10. `si->poc_lsb`
+    11. `si->delta_poc_bottom`
+    12. `si->delta_poc[0]`
+    13. `si->delta_poc[1]`
+    14. `si->redundant_pic_cnt`
+    15. `num_ref_idx_l0_active_minus1`
+    16. `num_ref_idx_l1_active_minus1`
+    17. `si->slice_type`
+    18. `si->nal_unit_type`
+    19. `si->pps`
+    20. `si->sps`
+    21. `si->slice_qp_delta`
+    22. `si->slice_qs_delta`
+    23. `si->disable_deblocking_filter_idc`
+    24. `si->slice_alpha_c0_offset_div2`
+    25. `si->slice_beta_offset_div2`
+3. Sanitizers: N/A
+4. Unsanitized Data Flows: 
+    1. (bs, `pps_id`,  The code reads `pps_id` from the bitstream without any sanitization. This could lead to an out-of-bounds access if `pps_id` is not within the valid range [0, 255].)
+    2. (bs, `si->sps`, The code reads `si->sps` from the bitstream based on `si->pps->sps_id`.  The code does not sanitize `si->pps->sps_id`, which could lead to an out-of-bounds access if `si->pps->sps_id` is not within the valid range [0, 31].)
+    3. (bs, `si->sps->log2_max_frame_num`,  The code reads `si->sps->log2_max_frame_num` from the bitstream. The code does not sanitize this value, which could lead to an out-of-bounds access if `si->sps->log2_max_frame_num` is not a valid log2 value for the given context. )
+    4. (bs, `si->sps->poc_type`, The code reads `si->sps->poc_type` from the bitstream. The code does not sanitize this value, which could lead to an out-of-bounds access if `si->sps->poc_type` is not within the valid range [0, 1].)
+    5. (bs, `si->sps->frame_mbs_only_flag`, The code reads `si->sps->frame_mbs_only_flag` from the bitstream. The code does not sanitize this value, which could lead to an out-of-bounds access if `si->sps->frame_mbs_only_flag` is not a valid boolean value.)
+    6. (bs, `si->sps->ChromaArrayType`, The code reads `si->sps->ChromaArrayType` from the bitstream. The code does not sanitize this value, which could lead to an out-of-bounds access if `si->sps->ChromaArrayType` is not within the valid range for the given context.)
+    7. (bs, `si->pps->num_ref_idx_l0_default_active_minus1`, The code reads `si->pps->num_ref_idx_l0_default_active_minus1` from the bitstream. The code does not sanitize this value, which could lead to an out-of-bounds access if `si->pps->num_ref_idx_l0_default_active_minus1` is not within the valid range for the given context.)
+    8. (bs, `si->pps->num_ref_idx_l1_default_active_minus1`, The code reads `si->pps->num_ref_idx_l1_default_active_minus1` from the bitstream. The code does not sanitize this value, which could lead to an out-of-bounds access if `si->pps->num_ref_idx_l1_default_active_minus1` is not within the valid range for the given context.)
+    9. (bs, `si->pps->slice_group_count`, The code reads `si->pps->slice_group_count` from the bitstream. The code does not sanitize this value, which could lead to an out-of-bounds access if `si->pps->slice_group_count` is not within the valid range for the given context.)
+
+
+5. Final Vulnerability analysis verdict: vulnerability: YES

@@ -1,684 +1,297 @@
-Let me know if you have any more context.
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```python
-```
+Let's break down the code and
+    return GF_OK;
+    return GF_OK;
+
+
+Let's break down the code and
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_OK;
+    return GF_
+    return GF_OK;
+    return
