@@ -1,0 +1,19 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. u (double)
+    2. v (double)
+    3. em (int)
+    4. uv_row (array, unspecified type)
+2. Sinks: 
+    1. return statement (int)
+3. Sanitizers: 
+    1. tiff_itrunc (function call, assumes it performs sanitization)
+4. Unsanitized Data Flows: 
+    1. (v, vi, vi could be out of bounds if (v - UV_VSTART) * (1. / UV_SQSIZ) is too large)
+    2. (u, ui, ui could be out of bounds if (u - uv_row[vi].ustart) * (1. / UV_SQSIZ) is too large)
+5. Final Vulnerability analysis verdict: vulnerability: YES 
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write|
+| explanation: The code does not adequately check the bounds of `vi` and `ui` before accessing elements in `uv_row`. This could lead to an out-of-bounds write if the input values `v` and `u` are outside the expected range. | 
+
+

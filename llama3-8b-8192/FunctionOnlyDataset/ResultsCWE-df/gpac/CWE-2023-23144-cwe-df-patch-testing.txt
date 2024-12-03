@@ -1,0 +1,19 @@
+Data flow analysis of the given code snippet:
+1. Sources:
+	1. NbBits
+	2. NbComp
+	3. bs (BitStream)
+	4. m_ft (Fixed*)
+5. Sinks:
+	1. m_ft (Fixed*)
+	2. Q_DecCoordOnUnitSphere (return value)
+6. Sanitizers:
+	1. (1 << (NbBits-1) )
+7. Unsanitized Data Flows:
+	* (bs, m_ft, unsanitized bitstream data)
+	* (bs, m_ft, unsanitized integer values)
+8. Final Vulnerability analysis verdict:
+vulnerability: YES
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound|
+| explanation: The code uses bitwise operations and integer arithmetic, which can lead to integer overflow or wraparound when dealing with large values. Specifically, the line "value = gf_bs_read_int(bs, NbBits) - (1 << (NbBits-1) );" can cause integer overflow if NbBits is large, leading to incorrect calculations and potential security vulnerabilities.

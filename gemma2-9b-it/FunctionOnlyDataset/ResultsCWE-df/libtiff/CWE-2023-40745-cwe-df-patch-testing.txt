@@ -1,0 +1,27 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. `spp` (Samples Per Pixel)
+    2. `imagew` (TIFFRasterScanlineSize(in))
+    3. `tilew` (TIFFTileRowSize(in))
+    4. `imagew` (image width)
+    5. `imagelength` (image length)
+    6. `tw` (TIFFGetField(in, TIFFTAG_TILEWIDTH, &tw))
+    7. `tl` (TIFFGetField(in, TIFFTAG_TILELENGTH, &tl))
+    8. `bps` (TIFFGetField(in, TIFFTAG_BITSPERSAMPLE, &bps))
+2. Sinks: 
+    1. `TIFFError(TIFFFileName(in), ...)` (multiple occurrences)
+    2. `return 0` (multiple occurrences)
+    3. `tilebuf = limitMalloc(tilesize)`
+    4. `_TIFFmemset(tilebuf, 0, tilesize)`
+    5. `cpSeparateBufToContigBuf(...)`
+    6. `bufp += imagew * nrow`
+    7. `_TIFFfree(tilebuf)`
+    8. `return status`
+3. Sanitizers: N/A
+4. Unsanitized Data Flows: 
+    1. (spp, `if (tilew && spp > (INT_MAX / tilew))`, Potential Integer Overflow: `spp * tilew` could exceed `INT_MAX` if `spp` or `tilew` are large)
+    2. (`imagew - tilew * spp`), `if ( iskew > INT_MAX )`, Potential Integer Overflow: `imagew - tilew * spp` could exceed `INT_MAX` if `imagew` and `tilew` are large and `spp` is significant)
+    5. Final Vulnerability analysis verdict: vulnerability: YES 
+
+
+

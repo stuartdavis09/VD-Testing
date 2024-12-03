@@ -1,0 +1,51 @@
+System:
+Analyze the given code for the security vulnerability known as Integer Overflow or Wraparound.
+
+The software performs a calculation that can produce an integer overflow or wraparound, when the logic assumes that the resulting value will always be larger than the original value. This can introduce other weaknesses when the calculation is used for resource management or execution control.
+
+['#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint add_nums(int num, int *nums)\n{\n    int sum = 0;\n    int i = 1;\n\n    while (sum < INT_MAX)\n    {\n        sum += nums[i];\n        i++;\n    }\n\n    printf("Sum is %d\\n", sum);\n    printf("i is %d\\n", i);\n\n    return sum;\n}', 'Overview:\nThe code takes a list of integers as an input from user and keeps adding them until they reach INT_MAX. Then it prints the sum and i.\n\nSub-components:\nS1: `sum` is incremented in the while loop using user input -> check if the condition of while loop makes sure that `sum` does not overflow\nS2: `i` is incremented in the while loop in each iteration -> check if the condition of while loop makes sure that `i` does not overflow\n\nAnalysis:\nA-S1: to check for the condition of overflow it is necessary that before adding an integer to `sum`, you make sure that it does not exceed the max values that it can hold. The given code checks the condition of overflow for `sum` after adding user input to it. Lets say after adding a user input to `sum` makes it greater than `INT_MAX` then it will overflow and wraparound. This will cause the while loop to run for infinite iterations. \nA-S2: the program does not check the overflow condition for `i`, in case of `sum` overflow and wraparound the while loop will keep running for infinite iterations. It will keep incrementing `i` that can cause an integer overflow.\n\nDecision:\nBased on A-S1, the code has an integer overflow vulnerabilty.\nBased on A-S2, the code has an integer overflow vulnerabilty.']
+
+['#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint add_nums(int num, int *nums)\n{\n    int sum = 0;\n    int i = 1;\n\n    while (sum > INT_MAX - nums[i] || i <= num)\n    {\n        sum += nums[i];\n        i++;\n    }\n\n    printf("Sum is %d\\n", sum);\n    printf("i is %d\\n", i);\n\n    return 0;\n}', 'Overview:\nThe code takes a list of integers as an input from user and keeps adding them until they reach INT_MAX. Then it prints the sum and i.\n\nSub-components:\nS1: `sum` is incremented in the while loop using user input -> check if the condition of while loop makes sure that `sum` does not overflow\nS2: `i` is incremented in the while loop in each iteration -> check if the condition of while loop makes sure that `i` does not overflow\n\nAnalysis:\nA-S1: to check for the condition of overflow it is necessary that before adding an integer to `sum`, make sure that it does not exceed the max value it can hold. The given code checks the condition of overflow for `sum` befor adding user input to it by comparing the `INT_MAX - nums[i]` value to `sum`. That shows if adding a new user input will exceed the max value the `sum` can hold. In this case it terminates the while loop, saving sum from integer overflow. \nA-S2: the program also checks in while loop if `i` is less than or equal to `num` that cannot exceed the `INT_MAX` value . So there is no possibility of integer overflow.\n\nDecision:\nBased on A-S1, the code is safe from integer overflow vulnerabilty.\nBased on A-S2, the code is safe from integer overflow vulnerabilty.']
+
+
+
+User:
+Please analyze the following code and give an explanation:
+GF_Err Q_DecCoordOnUnitSphere(GF_BifsDecoder *codec, GF_BitStream *bs, u32 NbBits, u32 NbComp, Fixed *m_ft)
+{
+	u32 i, orient, sign;
+	s32 value;
+	Fixed tang[4], delta;
+	s32 dir;
+
+    if (NbBits>32) return GF_NON_COMPLIANT_BITSTREAM;
+	if (NbComp != 2 && NbComp != 3) return GF_BAD_PARAM;
+
+	//only 2 or 3 comp in the quantized version
+	dir = 1;
+	if(NbComp == 2) dir -= 2 * gf_bs_read_int(bs, 1);
+	orient = gf_bs_read_int(bs, 2);
+	if ((orient==3) && (NbComp==2)) return GF_NON_COMPLIANT_BITSTREAM;
+	for(i=0; i<NbComp; i++) {
+		value = gf_bs_read_int(bs, NbBits) - (1 << (NbBits-1) );
+		sign = (value >= 0) ? 1 : -1;
+		m_ft[i] = sign * Q_InverseQuantize(0, 1, NbBits-1, sign*value);
+	}
+	delta = 1;
+	for (i=0; i<NbComp; i++) {
+		tang[i] = gf_tan(gf_mulfix(GF_PI/4, m_ft[i]) );
+		delta += gf_mulfix(tang[i], tang[i]);
+	}
+	delta = gf_divfix(INT2FIX(dir), gf_sqrt(delta) );
+	m_ft[orient] = delta;
+	for (i=0; i<NbComp; i++) {
+		m_ft[ (orient + i+1) % (NbComp+1) ] = gf_mulfix(tang[i], delta);
+	}
+	return GF_OK;
+}
+Please indicate your analysis with one of the options:
+ (1) YES: a security vulnerability is detected
+ (2) NO: no security vulnerability detected
+ Give your answer in the given format:
+Answer: ... (based off the options above)
+ Explanation: ...Let's think step-by-step.

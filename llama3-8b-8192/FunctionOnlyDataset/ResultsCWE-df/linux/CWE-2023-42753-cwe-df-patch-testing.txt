@@ -1,0 +1,23 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	1. `skb` (struct sk_buff) - input from network packet
+	2. `par` (struct xt_action_param) - input from external API
+	3. `opt` (struct ip_set_adt_opt) - input from external API
+	4. `adt` (enum ipset_adt) - input from external API
+	5. `set` (struct ip_set) - input from external API
+2. Sinks:
+	1. `adtfn(set, &e, &ext, &opt->ext, opt->cmdflags)` - returns an integer value
+3. Sanitizers:
+	4. `ip_set_get_ip4_port(skb, opt->flags & IPSET_DIM_TWO_SRC, &e.port, &e.proto)` - sanitizes input from `skb` and `opt`
+	5. `ip_set_get_ip6_port(skb, opt->flags & IPSET_DIM_TWO_SRC, &e.port, &e.proto)` - sanitizes input from `skb` and `opt`
+4. Unsanitized Data Flows:
+	1. (skb, adtfn, `adt` is not sanitized)
+	2. (par, adtfn, `par` is not sanitized)
+	5. (opt, adtfn, `opt` is not sanitized)
+5. Final Vulnerability analysis verdict:
+| vulnerability: YES |
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound |
+| explanation: The `adtfn` function returns an integer value based on the input from `set`, `e`, `ext`, `opt->ext`, and `opt->cmdflags`. The inputs to `adtfn` are not sanitized, which could lead to an integer overflow or wraparound vulnerability.

@@ -1,0 +1,18 @@
+Here is the output in the specified format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	1. `adapter->flags & IGB_FLAG_RX_LEGACY` (unknown external API call)
+	2. `adapter->max_frame_size` (unknown external API call)
+2. Sinks:
+	1. `set_ring_build_skb_enabled(rx_ring)` (sets a flag)
+	2. `set_ring_uses_large_buffer(rx_ring)` (sets a flag)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+	1. (`adapter->flags & IGB_FLAG_RX_LEGACY`, `set_ring_build_skb_enabled(rx_ring)`, unknown external API call)
+	2. (`adapter->max_frame_size`, `set_ring_uses_large_buffer(rx_ring)`, unknown external API call)
+5. Final Vulnerability analysis verdict:
+vulnerability: YES
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write |
+| explanation: The code snippet sets flags based on unknown external API calls, which could potentially lead to out-of-bounds writes.

@@ -1,0 +1,19 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources: 
+	* u (double)
+	* v (double)
+	* em (int)
+2. Sinks: 
+	* oog_encode(u, v)
+	* uv_row[vi].ncum + ui
+3. Sanitizers: N/A
+4. Unsanitized Data Flows: 
+	* (u, oog_encode(u, v), unsanitized user input)
+	* (v, oog_encode(u, v), unsanitized user input)
+	* (em, oog_encode(u, v), unsanitized user input)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write|
+| explanation: The code snippet uses unsanitized user input (u, v, and em) as indices for arrays, which could lead to out-of-bounds writes if the input values are manipulated to access arbitrary memory locations.

@@ -1,0 +1,79 @@
+System:
+You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Please provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.
+<OUTPUT FORMAT>
+Data flow analysis of the given code snippet:
+1. Sources: <numbered list of input sources>
+2. Sinks: <numbered list of output sinks>
+3. Sanitizers: <numbered list of sanitizers, if any>
+4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>
+5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound|
+| explanation: <explanation for prediction>|
+
+
+User:
+ Is the following code snippet prone to Integer Overflow or Wraparound
+/* Type specific function prefix */
+#define HTYPE		hash_netportnet
+#define IP_SET_HASH_WITH_PROTO
+#define IP_SET_HASH_WITH_NETS
+#define IPSET_NET_COUNT 2
+
+/* IPv4 variant */
+
+
+static int
+hash_netportnet4_kadt(struct ip_set *set, const struct sk_buff *skb,
+		      const struct xt_action_param *par,
+		      enum ipset_adt adt, struct ip_set_adt_opt *opt)
+{
+	const struct hash_netportnet4 *h = set->data;
+	ipset_adtfn adtfn = set->variant->adt[adt];
+	struct hash_netportnet4_elem e = { };
+	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
+
+	e.cidr[0] = INIT_CIDR(h->nets[0].cidr[0], HOST_MASK);
+	e.cidr[1] = INIT_CIDR(h->nets[0].cidr[1], HOST_MASK);
+	if (adt == IPSET_TEST)
+		e.ccmp = (HOST_MASK << (sizeof(e.cidr[0]) * 8)) | HOST_MASK;
+
+	if (!ip_set_get_ip4_port(skb, opt->flags & IPSET_DIM_TWO_SRC,
+				 &e.port, &e.proto))
+		return -EINVAL;
+
+	ip4addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip[0]);
+	ip4addrptr(skb, opt->flags & IPSET_DIM_THREE_SRC, &e.ip[1]);
+	e.ip[0] &= ip_set_netmask(e.cidr[0]);
+	e.ip[1] &= ip_set_netmask(e.cidr[1]);
+
+	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
+}
+
+static int
+hash_netportnet6_kadt(struct ip_set *set, const struct sk_buff *skb,
+		      const struct xt_action_param *par,
+		      enum ipset_adt adt, struct ip_set_adt_opt *opt)
+{
+	const struct hash_netportnet6 *h = set->data;
+	ipset_adtfn adtfn = set->variant->adt[adt];
+	struct hash_netportnet6_elem e = { };
+	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
+
+	e.cidr[0] = INIT_CIDR(h->nets[0].cidr[0], HOST_MASK);
+	e.cidr[1] = INIT_CIDR(h->nets[0].cidr[1], HOST_MASK);
+	if (adt == IPSET_TEST)
+		e.ccmp = (HOST_MASK << (sizeof(u8) * 8)) | HOST_MASK;
+
+	if (!ip_set_get_ip6_port(skb, opt->flags & IPSET_DIM_TWO_SRC,
+				 &e.port, &e.proto))
+		return -EINVAL;
+
+	ip6addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip[0].in6);
+	ip6addrptr(skb, opt->flags & IPSET_DIM_THREE_SRC, &e.ip[1].in6);
+	ip6_netmask(&e.ip[0], e.cidr[0]);
+	ip6_netmask(&e.ip[1], e.cidr[1]);
+
+	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
+}?

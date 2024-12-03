@@ -1,0 +1,27 @@
+Here is the output in the specified format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+   1. `in`
+   2. `spp`
+   3. `imagelength`
+   4. `imagewidth`
+   5. `buf`
+   6. `ignore`
+2. Sinks:
+   1. `status`
+   2. `tilebuf`
+   3. `bufp`
+   4. `TW`
+   5. `TL`
+   6. `bps`
+3. Sanitizers:
+   1. `_TIFFmemset`
+   2. `limitMalloc`
+   4. Unsanitized Data Flows:
+      1. (in, tilebuf, tilebuf is allocated from an unknown external API)
+      2. (in, TW, TL, and bps are read from an unknown external API without sanitization)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound |
+| explanation: The code snippet is prone to integer overflow or wraparound due to the usage of unsigned integers (uint32_t) to calculate `iskew` and `colb`. This could lead to unexpected behavior or even crashes when dealing with large values.

@@ -1,0 +1,142 @@
+System:
+You are a security expert in detecting Out-of-bounds Write.
+The software writes data past the end, or before the beginning, of the intended buffer.
+This is an example of vulnerable code:
+----VULNERABLE CODE START-----
+#include <stdio.h>
+#include <stdlib.h>
+
+char list[3][4] = {"shit", "damn", "fool"};
+char censored[3][5] = {"s***t", "d***n", "f***l"};
+
+char* lookup(char* word)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (word == list[i])
+        {
+            return censored[i];
+        }
+    }
+    return NULL;
+}
+
+char** censor_words(char** words, int num_words, int longest_word_length){
+    char** censored_words = (char**)malloc(num_words);
+    for (int i = 0; i < num_words; i++)
+    {
+        censored_words[i] = (char*)malloc(longest_word_length);
+    }
+
+    for (int i = 0; i < num_words; i++)
+    {
+        char* censor = lookup(words[i]);
+        if (censor != NULL)
+        {
+            censored_words[i] = censor;
+        }
+        else {
+            censored_words[i] = words[i];
+        }
+    }
+
+    return censored_words;
+}
+
+-----VULNERABLE CODE END-----
+
+-----EXPLANATION OF VULNERABILITY-----
+The `censored_words` array is allocated based on the length of the longest word from the user input `words`. But later if any word is present in `list` it is replaced by a censored version of that word. If the longest_word_length is 4 and the array `words` contains any of the words from `list` it will be replaced by its `censored` word that has a length of 5, causing an out-of-bound write. So, the code is vulnerable to out-of-bound write.
+-----EXPLANATION END-----
+
+This is an example of patched code:
+-----PATCHED CODE 1 START-----
+#include <stdio.h>
+#include <stdlib.h>
+
+char list[3][4] = {"shit", "damn", "fool"};
+char censored[3][5] = {"s***t", "d***n", "f***l"};
+int longest_censored_word_length = 5;
+
+char* lookup(char* word)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (word == list[i])
+        {
+            return censored[i];
+        }
+    }
+    return NULL;
+}
+
+char** censor_words(char** words, int num_words, int longest_word_length){
+    char** censored_words = (char**)malloc(num_words);
+    for (int i = 0; i < num_words; i++)
+    {
+        censored_words[i] = (char*)malloc(max(longest_censored_word_length, longest_word_length));
+    }
+
+    for (int i = 0; i < num_words; i++)
+    {
+        char* censor = lookup(words[i]);
+        if (censor != NULL)
+        {
+            censored_words[i] = censor;
+        }
+        else {
+            censored_words[i] = words[i];
+        }
+    }
+
+    return censored_words;
+}
+
+-----PATCHED CODE 1 END-----
+
+-----EXPLANATION OF PATCH-----
+The `censored_words` array is allocated based on the length of the longest word from both the `censored` list and the user input `words`. So, later any word from `words` or `censored` cannot exceed the allocated memory bound, protecting it from an out-of-bound write. So, the code is not vulnerable to out-of-bound write. 
+-----EXPLANATION END-----
+
+
+Give your answer in the following structure:
+1. Vulnerability analysis: <YES, THERE IS A VULNERABILITY or NO, THERE IS NO VULNERABILITY>
+2. Explanation: <Leave as N/A if there is no vulnerability>
+| CWE Name: <Name of Vulnerability> |
+
+
+User:
+Please analyze the following code for Out-of-bounds Write:
+
+--------------- START OF CODE ---------------
+#if !LOGLUV_PUBLIC
+static
+#endif
+    int
+    uv_encode(double u, double v, int em) /* encode (u',v') coordinates */
+{
+    register int vi, ui;
+
+    if (u != u || v != v)
+    {
+        u = U_NEU;
+        v = V_NEU;
+    }
+
+    if (v < UV_VSTART)
+        return oog_encode(u, v);
+    vi = tiff_itrunc((v - UV_VSTART) * (1. / UV_SQSIZ), em);
+    if (vi >= UV_NVS)
+        return oog_encode(u, v);
+    if (u < uv_row[vi].ustart)
+        return oog_encode(u, v);
+    ui = tiff_itrunc((u - uv_row[vi].ustart) * (1. / UV_SQSIZ), em);
+    if (ui >= uv_row[vi].nus)
+        return oog_encode(u, v);
+
+    return (uv_row[vi].ncum + ui);
+}
+--------------- END OF CODE ---------------
+
+Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Let’s think step-by-step

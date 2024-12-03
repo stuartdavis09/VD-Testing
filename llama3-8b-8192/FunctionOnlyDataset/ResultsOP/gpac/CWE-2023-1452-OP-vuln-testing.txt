@@ -1,0 +1,13 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The vulnerability is due to the use of an unsanitized user input (`szLine`) in the `gf_fgets` function, which can lead to an Out-of-bounds Write.
+
+The issue is in the following lines:
+```c
+memset(szLine, 0, sizeof(char)*lineSize);
+sOK = gf_fgets(szLine, lineSize, txt_in);
+```
+The `gf_fgets` function reads data from the file `txt_in` into the buffer `szLine`. However, the `lineSize` parameter is not validated to ensure that it does not exceed the size of the buffer `szLineConv` (2048 bytes).
+
+If the file `txt_in` contains data that exceeds the size of the buffer `szLineConv`, the `gf_fgets` function will write data past the end of the buffer, leading to an Out-of-bounds Write.
+
+| CWE Name: CWE-120 |

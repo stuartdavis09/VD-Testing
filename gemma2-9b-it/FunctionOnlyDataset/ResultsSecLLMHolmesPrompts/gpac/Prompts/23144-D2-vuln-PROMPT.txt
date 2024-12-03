@@ -1,0 +1,46 @@
+System:
+You are a code security expert who analyzes the given code for the security vulnerability known as Integer Overflow or Wraparound.
+
+The software performs a calculation that can produce an integer overflow or wraparound, when the logic assumes that the resulting value will always be larger than the original value. This can introduce other weaknesses when the calculation is used for resource management or execution control.
+
+
+
+User:
+Please analyze the following code and give an explanation:
+GF_Err Q_DecCoordOnUnitSphere(GF_BifsDecoder *codec, GF_BitStream *bs, u32 NbBits, u32 NbComp, Fixed *m_ft)
+{
+	u32 i, orient, sign;
+	s32 value;
+	Fixed tang[4], delta;
+	s32 dir;
+
+	if (NbComp != 2 && NbComp != 3) return GF_BAD_PARAM;
+
+	//only 2 or 3 comp in the quantized version
+	dir = 1;
+	if(NbComp == 2) dir -= 2 * gf_bs_read_int(bs, 1);
+	orient = gf_bs_read_int(bs, 2);
+	if ((orient==3) && (NbComp==2)) return GF_NON_COMPLIANT_BITSTREAM;
+	for(i=0; i<NbComp; i++) {
+		value = gf_bs_read_int(bs, NbBits) - (1 << (NbBits-1) );
+		sign = (value >= 0) ? 1 : -1;
+		m_ft[i] = sign * Q_InverseQuantize(0, 1, NbBits-1, sign*value);
+	}
+	delta = 1;
+	for (i=0; i<NbComp; i++) {
+		tang[i] = gf_tan(gf_mulfix(GF_PI/4, m_ft[i]) );
+		delta += gf_mulfix(tang[i], tang[i]);
+	}
+	delta = gf_divfix(INT2FIX(dir), gf_sqrt(delta) );
+	m_ft[orient] = delta;
+	for (i=0; i<NbComp; i++) {
+		m_ft[ (orient + i+1) % (NbComp+1) ] = gf_mulfix(tang[i], delta);
+	}
+	return GF_OK;
+}
+Please indicate your analysis with one of the options:
+ (1) YES: a security vulnerability is detected
+ (2) NO: no security vulnerability detected
+ Give your answer in the given format:
+Answer: ... (based off the options above)
+ Explanation: ...

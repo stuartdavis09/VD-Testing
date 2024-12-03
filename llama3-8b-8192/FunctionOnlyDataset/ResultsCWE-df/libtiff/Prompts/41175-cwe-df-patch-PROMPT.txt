@@ -1,0 +1,314 @@
+System:
+You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Please provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.
+<OUTPUT FORMAT>
+Data flow analysis of the given code snippet:
+1. Sources: <numbered list of input sources>
+2. Sinks: <numbered list of output sinks>
+3. Sanitizers: <numbered list of sanitizers, if any>
+4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>
+5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound|
+| explanation: <explanation for prediction>|
+
+
+User:
+ Is the following code snippet prone to Integer Overflow or Wraparound
+int main(int argc, char *argv[])
+{
+    uint32_t width = 0, length = 0, linebytes, bufsize;
+    uint32_t nbands = 1;      /* number of bands in input image*/
+    _TIFF_off_t hdr_size = 0; /* size of the header to skip */
+    TIFFDataType dtype = TIFF_BYTE;
+    int16_t depth = 1;                 /* bytes per pixel in input image */
+    int swab = 0;                      /* byte swapping flag */
+    InterleavingType interleaving = 0; /* interleaving type flag */
+    uint32_t rowsperstrip = (uint32_t)-1;
+    uint16_t photometric = PHOTOMETRIC_MINISBLACK;
+    uint16_t config = PLANARCONFIG_CONTIG;
+    uint16_t fillorder = FILLORDER_LSB2MSB;
+    int fd;
+    char *outfilename = NULL;
+    TIFF *out;
+    uint32_t temp_limit_check = 0;
+
+    uint32_t row, col, band;
+    int c;
+    unsigned char *buf = NULL, *buf1 = NULL;
+#if !HAVE_DECL_OPTARG
+    extern int optind;
+    extern char *optarg;
+#endif
+
+    while ((c = getopt(argc, argv, "c:r:H:w:l:b:d:LMp:si:o:h")) != -1)
+    {
+        switch (c)
+        {
+            case 'c': /* compression scheme */
+                if (!processCompressOptions(optarg))
+                    usage(EXIT_FAILURE);
+                break;
+            case 'r': /* rows/strip */
+                rowsperstrip = atoi(optarg);
+                break;
+            case 'H': /* size of input image file header */
+                hdr_size = atoi(optarg);
+                break;
+            case 'w': /* input image width */
+                width = atoi(optarg);
+                break;
+            case 'l': /* input image length */
+                length = atoi(optarg);
+                break;
+            case 'b': /* number of bands in input image */
+                nbands = atoi(optarg);
+                break;
+            case 'd': /* type of samples in input image */
+                if (strncmp(optarg, "byte", 4) == 0)
+                    dtype = TIFF_BYTE;
+                else if (strncmp(optarg, "short", 5) == 0)
+                    dtype = TIFF_SHORT;
+                else if (strncmp(optarg, "long", 4) == 0)
+                    dtype = TIFF_LONG;
+                else if (strncmp(optarg, "sbyte", 5) == 0)
+                    dtype = TIFF_SBYTE;
+                else if (strncmp(optarg, "sshort", 6) == 0)
+                    dtype = TIFF_SSHORT;
+                else if (strncmp(optarg, "slong", 5) == 0)
+                    dtype = TIFF_SLONG;
+                else if (strncmp(optarg, "float", 5) == 0)
+                    dtype = TIFF_FLOAT;
+                else if (strncmp(optarg, "double", 6) == 0)
+                    dtype = TIFF_DOUBLE;
+                else
+                    dtype = TIFF_BYTE;
+                depth = TIFFDataWidth(dtype);
+                break;
+            case 'L': /* input has lsb-to-msb fillorder */
+                fillorder = FILLORDER_LSB2MSB;
+                break;
+            case 'M': /* input has msb-to-lsb fillorder */
+                fillorder = FILLORDER_MSB2LSB;
+                break;
+            case 'p': /* photometric interpretation */
+                if (strncmp(optarg, "miniswhite", 10) == 0)
+                    photometric = PHOTOMETRIC_MINISWHITE;
+                else if (strncmp(optarg, "minisblack", 10) == 0)
+                    photometric = PHOTOMETRIC_MINISBLACK;
+                else if (strncmp(optarg, "rgb", 3) == 0)
+                    photometric = PHOTOMETRIC_RGB;
+                else if (strncmp(optarg, "cmyk", 4) == 0)
+                    photometric = PHOTOMETRIC_SEPARATED;
+                else if (strncmp(optarg, "ycbcr", 5) == 0)
+                    photometric = PHOTOMETRIC_YCBCR;
+                else if (strncmp(optarg, "cielab", 6) == 0)
+                    photometric = PHOTOMETRIC_CIELAB;
+                else if (strncmp(optarg, "icclab", 6) == 0)
+                    photometric = PHOTOMETRIC_ICCLAB;
+                else if (strncmp(optarg, "itulab", 6) == 0)
+                    photometric = PHOTOMETRIC_ITULAB;
+                else
+                    photometric = PHOTOMETRIC_MINISBLACK;
+                break;
+            case 's': /* do we need to swap bytes? */
+                swab = 1;
+                break;
+            case 'i': /* type of interleaving */
+                if (strncmp(optarg, "pixel", 4) == 0)
+                    interleaving = PIXEL;
+                else if (strncmp(optarg, "band", 6) == 0)
+                    interleaving = BAND;
+                else
+                    interleaving = 0;
+                break;
+            case 'o':
+                outfilename = optarg;
+                break;
+            case 'h':
+                usage(EXIT_SUCCESS);
+            default:
+                break;
+        }
+    }
+
+    if (argc - optind < 2)
+        usage(EXIT_FAILURE);
+
+    fd = open(argv[optind], O_RDONLY | O_BINARY, 0);
+    if (fd < 0)
+    {
+        fprintf(stderr, "%s: %s: Cannot open input file.\n", argv[0],
+                argv[optind]);
+        return (EXIT_FAILURE);
+    }
+
+    if (nbands == 0)
+    {
+        fprintf(stderr, "The number of bands is illegal.\n");
+        return (-1);
+    }
+
+    if (guessSize(fd, dtype, hdr_size, nbands, swab, &width, &length) < 0)
+        return EXIT_FAILURE;
+
+    if ((width == 0) || (length == 0) ){
+        fprintf(stderr, "Too large nbands value specified.\n");
+        return (EXIT_FAILURE);
+    }
+    
+    temp_limit_check = nbands * depth;
+
+    if ( !temp_limit_check || length > ( UINT_MAX / temp_limit_check ) )  {
+        fprintf(stderr, "Too large length size specified.\n");
+        return (EXIT_FAILURE);
+    }
+    temp_limit_check = temp_limit_check * length;
+
+    if ( !temp_limit_check || width > ( UINT_MAX / temp_limit_check ) )  {
+        fprintf(stderr, "Too large width size specified.\n");
+        return (EXIT_FAILURE);
+    }
+    temp_limit_check = temp_limit_check * width;
+
+    if ( !temp_limit_check || hdr_size > ( UINT_MAX - temp_limit_check ) )  {
+        fprintf(stderr, "Too large header size specified.\n");
+        return (EXIT_FAILURE);
+    }
+
+    if (outfilename == NULL)
+        outfilename = argv[optind + 1];
+    out = TIFFOpen(outfilename, "w");
+    if (out == NULL)
+    {
+        fprintf(stderr, "%s: %s: Cannot open file for output.\n", argv[0],
+                outfilename);
+        return (EXIT_FAILURE);
+    }
+    TIFFSetField(out, TIFFTAG_IMAGEWIDTH, width);
+    TIFFSetField(out, TIFFTAG_IMAGELENGTH, length);
+    TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
+    TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, nbands);
+    TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, depth * 8);
+    TIFFSetField(out, TIFFTAG_FILLORDER, fillorder);
+    TIFFSetField(out, TIFFTAG_PLANARCONFIG, config);
+    TIFFSetField(out, TIFFTAG_PHOTOMETRIC, photometric);
+    switch (dtype)
+    {
+        case TIFF_BYTE:
+        case TIFF_SHORT:
+        case TIFF_LONG:
+            TIFFSetField(out, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT);
+            break;
+        case TIFF_SBYTE:
+        case TIFF_SSHORT:
+        case TIFF_SLONG:
+            TIFFSetField(out, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_INT);
+            break;
+        case TIFF_FLOAT:
+        case TIFF_DOUBLE:
+            TIFFSetField(out, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_IEEEFP);
+            break;
+        default:
+            TIFFSetField(out, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_VOID);
+            break;
+    }
+    if (compression == (uint16_t)-1)
+        compression = COMPRESSION_PACKBITS;
+    TIFFSetField(out, TIFFTAG_COMPRESSION, compression);
+    switch (compression)
+    {
+        case COMPRESSION_JPEG:
+            if (photometric == PHOTOMETRIC_RGB &&
+                jpegcolormode == JPEGCOLORMODE_RGB)
+                photometric = PHOTOMETRIC_YCBCR;
+            TIFFSetField(out, TIFFTAG_JPEGQUALITY, quality);
+            TIFFSetField(out, TIFFTAG_JPEGCOLORMODE, jpegcolormode);
+            break;
+        case COMPRESSION_LZW:
+        case COMPRESSION_ADOBE_DEFLATE:
+        case COMPRESSION_DEFLATE:
+            if (predictor != 0)
+                TIFFSetField(out, TIFFTAG_PREDICTOR, predictor);
+            break;
+    }
+    switch (interleaving)
+    {
+        case BAND: /* band interleaved data */
+            linebytes = width * depth;
+            buf = (unsigned char *)_TIFFmalloc(linebytes);
+            break;
+        case PIXEL: /* pixel interleaved data */
+        default:
+            linebytes = width * nbands * depth;
+            break;
+    }
+    bufsize = width * nbands * depth;
+    buf1 = (unsigned char *)_TIFFmalloc(bufsize);
+
+    rowsperstrip = TIFFDefaultStripSize(out, rowsperstrip);
+    if (rowsperstrip > length)
+    {
+        rowsperstrip = length;
+    }
+    TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, rowsperstrip);
+
+    _TIFF_lseek_f(fd, hdr_size, SEEK_SET); /* Skip the file header */
+    for (row = 0; row < length; row++)
+    {
+        switch (interleaving)
+        {
+            case BAND: /* band interleaved data */
+                for (band = 0; band < nbands; band++)
+                {
+                    if (_TIFF_lseek_f(
+                            fd, hdr_size + (length * band + row) * linebytes,
+                            SEEK_SET) == (_TIFF_off_t)-1)
+                    {
+                        fprintf(stderr,
+                                "%s: %s: scanline %" PRIu32 ": seek error.\n",
+                                argv[0], argv[optind], row);
+                        break;
+                    }
+                    if (read(fd, buf, linebytes) < 0)
+                    {
+                        fprintf(stderr,
+                                "%s: %s: scanline %" PRIu32 ": Read error.\n",
+                                argv[0], argv[optind], row);
+                        break;
+                    }
+                    if (swab) /* Swap bytes if needed */
+                        swapBytesInScanline(buf, width, dtype);
+                    for (col = 0; col < width; col++)
+                        memcpy(buf1 + (col * nbands + band) * depth,
+                               buf + col * depth, depth);
+                }
+                break;
+            case PIXEL: /* pixel interleaved data */
+            default:
+                if (read(fd, buf1, bufsize) < 0)
+                {
+                    fprintf(stderr,
+                            "%s: %s: scanline %" PRIu32 ": Read error.\n",
+                            argv[0], argv[optind], row);
+                    break;
+                }
+                if (swab) /* Swap bytes if needed */
+                    swapBytesInScanline(buf1, width, dtype);
+                break;
+        }
+
+        if (TIFFWriteScanline(out, buf1, row, 0) < 0)
+        {
+            fprintf(stderr, "%s: %s: scanline %" PRIu32 ": Write error.\n",
+                    argv[0], outfilename, row);
+            break;
+        }
+    }
+    if (buf)
+        _TIFFfree(buf);
+    if (buf1)
+        _TIFFfree(buf1);
+    TIFFClose(out);
+    return (EXIT_SUCCESS);
+}?

@@ -1,0 +1,56 @@
+System:
+You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Please provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.
+<OUTPUT FORMAT>
+Data flow analysis of the given code snippet:
+1. Sources: <numbered list of input sources>
+2. Sinks: <numbered list of output sinks>
+3. Sanitizers: <numbered list of sanitizers, if any>
+4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>
+5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write|
+| explanation: <explanation for prediction>|
+
+
+User:
+ Is the following code snippet prone to Out-of-bounds Write
+static void fill_kobj_path(const struct kobject *kobj, char *path, int length)
+{
+	const struct kobject *parent;
+
+	--length;
+	for (parent = kobj; parent; parent = parent->parent) {
+		int cur = strlen(kobject_name(parent));
+		/* back up enough to print this name with '/' */
+		length -= cur;
+		memcpy(path + length, kobject_name(parent), cur);
+		*(path + --length) = '/';
+	}
+
+	pr_debug("kobject: '%s' (%p): %s: path = '%s'\n", kobject_name(kobj),
+		 kobj, __func__, path);
+}
+
+/**
+ * kobject_get_path() - Allocate memory and fill in the path for @kobj.
+ * @kobj:	kobject in question, with which to build the path
+ * @gfp_mask:	the allocation type used to allocate the path
+ *
+ * Return: The newly allocated memory, caller must free with kfree().
+ */
+char *kobject_get_path(const struct kobject *kobj, gfp_t gfp_mask)
+{
+	char *path;
+	int len;
+
+	len = get_kobj_path_length(kobj);
+	if (len == 0)
+		return NULL;
+	path = kzalloc(len, gfp_mask);
+	if (!path)
+		return NULL;
+	fill_kobj_path(kobj, path, len)
+
+	return path;
+}?

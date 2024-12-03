@@ -1,0 +1,20 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. u (double)
+    2. v (double)
+    3. em (int)
+    4. uv_row (array of unknown type)
+2. Sinks: 
+    1. return statement (int value)
+3. Sanitizers: 
+    1. tiff_itrunc( )
+4. Unsanitized Data Flows: 
+    1. (v - UV_VSTART, vi, vi is calculated based on v, which is an unsanitized input)
+    2. (u - uv_row[vi].ustart, ui, ui is calculated based on u and uv_row[vi].ustart, which could be manipulated)
+5. Final Vulnerability analysis verdict: vulnerability: YES 
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write|
+| explanation: The code calculates indices `vi` and `ui` based on unsanitized inputs `v` and `u`, respectively. These indices are used to access elements in the `uv_row` array. If these inputs are maliciously crafted, they could lead to out-of-bounds array access, resulting in a buffer overflow or other security vulnerabilities. |  
+
+
+

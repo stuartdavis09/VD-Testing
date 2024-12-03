@@ -1,0 +1,11 @@
+Answer: (1) YES
+
+Explanation: The code is vulnerable to an integer overflow in the following line:
+
+```
+iskew = imagew - tilew * spp;
+```
+
+The variable `iskew` is declared as an `int`, but the calculation can result in a value that is larger than the maximum value that can be represented by an `int` (INT_MAX). This can cause the value of `iskew` to wrap around and become a negative value, which can lead to unexpected behavior in the rest of the code.
+
+The calculation can overflow if the product of `tilew` and `spp` is greater than the value of `imagew`. This can happen if `tilew` is large and `spp` is close to or greater than INT_MAX / tilew.

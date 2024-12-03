@@ -1,0 +1,25 @@
+System:
+You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Please provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.
+<OUTPUT FORMAT>
+Data flow analysis of the given code snippet:
+1. Sources: <numbered list of input sources>
+2. Sinks: <numbered list of output sinks>
+3. Sanitizers: <numbered list of sanitizers, if any>
+4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>
+5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>
+| vulnerability type: 476 |
+| vulnerability name: NULL Pointer Dereference|
+| explanation: <explanation for prediction>|
+
+
+User:
+ Is the following code snippet prone to NULL Pointer Dereference
+void TIFFClose(TIFF *tif)
+{
+    TIFFCloseProc closeproc = tif->tif_closeproc;
+    thandle_t fd = tif->tif_clientdata;
+
+    TIFFCleanup(tif);
+    (void)(*closeproc)(fd);
+}?

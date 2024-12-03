@@ -1,0 +1,46 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `pkt`
+	* `start`
+	* `max`
+	* `rec_counter`
+2. Sinks:
+	* `name`
+	* `rr->name`
+	* `rr->type`
+	* `rr->dnsclass`
+	* `rr->ttl`
+	* `rr->rdlength`
+	* `rr->rdata.a.ip_addr`
+	* `rr->rdata.aaaa.ip_addr`
+	* `rr->rdata.cname.name`
+	* `rr->rdata.srv.prio`
+	* `rr->rdata.srv.weight`
+	* `rr->rdata.srv.port`
+	* `rr->rdata.srv.target`
+	* `rr->data`
+3. Sanitizers:
+	* `pj_memcpy`
+	* `pj_ntohs`
+	* `pj_ntohl`
+4. Unsanitized Data Flows:
+	* (`start`, `rr->name`, no sanitizer)
+	* (`start`, `rr->type`, no sanitizer)
+	* (`start`, `rr->dnsclass`, no sanitizer)
+	* (`start`, `rr->ttl`, no sanitizer)
+	* (`start`, `rr->rdlength`, no sanitizer)
+	* (`start`, `rr->rdata.a.ip_addr`, no sanitizer)
+	* (`start`, `rr->rdata.aaaa.ip_addr`, no sanitizer)
+	* (`start`, `rr->rdata.cname.name`, no sanitizer)
+	* (`start`, `rr->rdata.srv.prio`, no sanitizer)
+	* (`start`, `rr->rdata.srv.weight`, no sanitizer)
+	* (`start`, `rr->rdata.srv.port`, no sanitizer)
+	* (`start`, `rr->rdata.srv.target`, no sanitizer)
+	* (`start`, `rr->data`, no sanitizer)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write |
+| explanation: The code does not properly validate the length of the input data, which could lead to an out-of-bounds write vulnerability.

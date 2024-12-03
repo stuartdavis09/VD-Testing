@@ -1,0 +1,10 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The code snippet is an implementation of the H.264/AVC standard, specifically for parsing a slice header. The vulnerability lies in the allocation of memory for the `sps` and `pps` arrays.
+
+The `sps` array is allocated with a fixed size of 32, and the `pps` array is allocated with a fixed size of 255. However, the code allows the user to specify the `sps_id` and `pps_id` values, which can exceed the allocated memory bounds.
+
+For example, if `sps_id` is set to 32, it will access the 33rd element of the `sps` array, which is out of bounds. Similarly, if `pps_id` is set to 256, it will access the 257th element of the `pps` array, which is also out of bounds.
+
+This can lead to an out-of-bounds write vulnerability, as the code attempts to access and modify memory outside the allocated bounds.
+
+CWE Name: CWE-126: Buffer Over-read

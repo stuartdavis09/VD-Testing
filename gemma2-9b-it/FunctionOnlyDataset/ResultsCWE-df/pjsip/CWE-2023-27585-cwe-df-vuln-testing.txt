@@ -1,0 +1,38 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. pkt
+    2. start
+    3. max
+    4. rec_counter
+    5. parsed_len
+    6. name_len
+    7. offset
+    8. label_len
+    9. name
+2. Sinks: 
+    1. name_len
+    2. parsed_len
+    3. offset
+    4. name
+    5. rr->name.ptr
+    6. rr->type
+    7. rr->dnsclass
+    8. rr->ttl
+    9. rr->rdlength
+    10. rr->rdata.a.ip_addr
+    11. rr->rdata.aaaa.ip_addr
+    12. rr->rdata.cname.name.ptr
+    13. rr->rdata.srv.prio
+    14. rr->rdata.srv.weight
+    15. rr->rdata.srv.port
+    16. rr->rdata.srv.target.ptr
+    17. rr->data
+3. Sanitizers: 
+    1. pj_htons
+    2. pj_ntohs
+    3. pj_ntohl
+4. Unsanitized Data Flows: 
+    1. (pkt, rr->rdata.srv.target.ptr,  The code does not sanitize the input pkt when constructing rr->rdata.srv.target.ptr, which could lead to buffer overflows or other vulnerabilities if the input pkt contains malicious data.)
+    2. (pkt, rr->name.ptr, The code does not sanitize the input pkt when constructing rr->name.ptr, which could lead to buffer overflows or other vulnerabilities if the input pkt contains malicious data.)
+
+5. Final Vulnerability analysis verdict: vulnerability: YES

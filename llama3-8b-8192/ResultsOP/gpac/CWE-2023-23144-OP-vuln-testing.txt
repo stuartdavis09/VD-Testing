@@ -1,2 +1,0 @@
-1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: The vulnerability is related to an integer overflow in the calculation of the `delta` variable.

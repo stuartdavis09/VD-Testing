@@ -1,0 +1,47 @@
+System:
+You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Please provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.
+<OUTPUT FORMAT>
+Data flow analysis of the given code snippet:
+1. Sources: <numbered list of input sources>
+2. Sinks: <numbered list of output sinks>
+3. Sanitizers: <numbered list of sanitizers, if any>
+4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>
+5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>
+| vulnerability type: 416 |
+| vulnerability name: Use After Free|
+| explanation: <explanation for prediction>|
+
+
+User:
+ Is the following code snippet prone to Use After Free
+static void l2cap_sock_cleanup_listen(struct sock *parent);
+
+static int l2cap_sock_release(struct socket *sock)
+{
+	struct sock *sk = sock->sk;
+	int err;
+	struct l2cap_chan *chan;
+
+	BT_DBG("sock %p, sk %p", sock, sk);
+
+	if (!sk)
+		return 0;
+
+	l2cap_sock_cleanup_listen(sk);
+	bt_sock_unlink(&l2cap_sk_list, sk);
+
+	err = l2cap_sock_shutdown(sock, SHUT_RDWR);
+	chan = l2cap_pi(sk)->chan;
+
+	l2cap_chan_hold(chan);
+	l2cap_chan_lock(chan);
+
+	sock_orphan(sk);
+	l2cap_sock_kill(sk);
+
+	l2cap_chan_unlock(chan);
+	l2cap_chan_put(chan);
+
+	return err;
+}?

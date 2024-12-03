@@ -1,0 +1,112 @@
+System:
+You are a code security expert who analyzes the given code for the security vulnerability known as Integer Overflow or Wraparound.
+
+The software performs a calculation that can produce an integer overflow or wraparound, when the logic assumes that the resulting value will always be larger than the original value. This can introduce other weaknesses when the calculation is used for resource management or execution control.
+
+['#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint add_nums(int num, int *nums)\n{\n    int sum = 0;\n    int i = 1;\n\n    while (sum < INT_MAX)\n    {\n        sum += nums[i];\n        i++;\n    }\n\n    printf("Sum is %d\\n", sum);\n    printf("i is %d\\n", i);\n\n    return sum;\n}', 'Overview:\nThe code takes a list of integers as an input from user and keeps adding them until they reach INT_MAX. Then it prints the sum and i.\n\nSub-components:\nS1: `sum` is incremented in the while loop using user input -> check if the condition of while loop makes sure that `sum` does not overflow\nS2: `i` is incremented in the while loop in each iteration -> check if the condition of while loop makes sure that `i` does not overflow\n\nAnalysis:\nA-S1: to check for the condition of overflow it is necessary that before adding an integer to `sum`, you make sure that it does not exceed the max values that it can hold. The given code checks the condition of overflow for `sum` after adding user input to it. Lets say after adding a user input to `sum` makes it greater than `INT_MAX` then it will overflow and wraparound. This will cause the while loop to run for infinite iterations. \nA-S2: the program does not check the overflow condition for `i`, in case of `sum` overflow and wraparound the while loop will keep running for infinite iterations. It will keep incrementing `i` that can cause an integer overflow.\n\nDecision:\nBased on A-S1, the code has an integer overflow vulnerabilty.\nBased on A-S2, the code has an integer overflow vulnerabilty.']
+
+['#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint add_nums(int num, int *nums)\n{\n    int sum = 0;\n    int i = 1;\n\n    while (sum > INT_MAX - nums[i] || i <= num)\n    {\n        sum += nums[i];\n        i++;\n    }\n\n    printf("Sum is %d\\n", sum);\n    printf("i is %d\\n", i);\n\n    return 0;\n}', 'Overview:\nThe code takes a list of integers as an input from user and keeps adding them until they reach INT_MAX. Then it prints the sum and i.\n\nSub-components:\nS1: `sum` is incremented in the while loop using user input -> check if the condition of while loop makes sure that `sum` does not overflow\nS2: `i` is incremented in the while loop in each iteration -> check if the condition of while loop makes sure that `i` does not overflow\n\nAnalysis:\nA-S1: to check for the condition of overflow it is necessary that before adding an integer to `sum`, make sure that it does not exceed the max value it can hold. The given code checks the condition of overflow for `sum` befor adding user input to it by comparing the `INT_MAX - nums[i]` value to `sum`. That shows if adding a new user input will exceed the max value the `sum` can hold. In this case it terminates the while loop, saving sum from integer overflow. \nA-S2: the program also checks in while loop if `i` is less than or equal to `num` that cannot exceed the `INT_MAX` value . So there is no possibility of integer overflow.\n\nDecision:\nBased on A-S1, the code is safe from integer overflow vulnerabilty.\nBased on A-S2, the code is safe from integer overflow vulnerabilty.']
+
+
+
+User:
+Please analyze the following code and give an explanation:
+DECLAREreadFunc(readSeparateTilesIntoBuffer)
+{
+    int status = 1;
+    uint32_t imagew = TIFFRasterScanlineSize(in);
+    uint32_t tilew = TIFFTileRowSize(in);
+    int iskew;
+    tsize_t tilesize = TIFFTileSize(in);
+    tdata_t tilebuf;
+    uint8_t *bufp = (uint8_t *)buf;
+    uint32_t tw, tl;
+    uint32_t row;
+    uint16_t bps = 0, bytes_per_sample;
+
+    if (tilew && spp > (INT_MAX / tilew))
+    {
+        TIFFError(TIFFFileName(in),
+                  "Error, cannot handle that much samples per tile row (Tile "
+                  "Width * Samples/Pixel)");
+        return 0;
+    }
+
+    iskew = imagew - tilew * spp;
+    tilebuf = limitMalloc(tilesize);
+    if (tilebuf == 0)
+        return 0;
+    _TIFFmemset(tilebuf, 0, tilesize);
+    (void)TIFFGetField(in, TIFFTAG_TILEWIDTH, &tw);
+    (void)TIFFGetField(in, TIFFTAG_TILELENGTH, &tl);
+    (void)TIFFGetField(in, TIFFTAG_BITSPERSAMPLE, &bps);
+    if (bps == 0)
+    {
+        TIFFError(TIFFFileName(in), "Error, cannot read BitsPerSample");
+        status = 0;
+        goto done;
+    }
+    if ((bps % 8) != 0)
+    {
+        TIFFError(
+            TIFFFileName(in),
+            "Error, cannot handle BitsPerSample that is not a multiple of 8");
+        status = 0;
+        goto done;
+    }
+    bytes_per_sample = bps / 8;
+
+    for (row = 0; row < imagelength; row += tl)
+    {
+        uint32_t nrow = (row + tl > imagelength) ? imagelength - row : tl;
+        uint32_t colb = 0;
+        uint32_t col;
+
+        for (col = 0; col < imagewidth; col += tw)
+        {
+            tsample_t s;
+
+            for (s = 0; s < spp; s++)
+            {
+                if (TIFFReadTile(in, tilebuf, col, row, 0, s) < 0 && !ignore)
+                {
+                    TIFFError(TIFFFileName(in),
+                              "Error, can't read tile at %" PRIu32 " %" PRIu32
+                              ", "
+                              "sample %" PRIu16,
+                              col, row, s);
+                    status = 0;
+                    goto done;
+                }
+                /*
+                 * Tile is clipped horizontally.  Calculate
+                 * visible portion and skewing factors.
+                 */
+                if (colb + tilew * spp > imagew)
+                {
+                    uint32_t width = imagew - colb;
+                    int oskew = tilew * spp - width;
+                    cpSeparateBufToContigBuf(
+                        bufp + colb + s * bytes_per_sample, tilebuf, nrow,
+                        width / (spp * bytes_per_sample), oskew + iskew,
+                        oskew / spp, spp, bytes_per_sample);
+                }
+                else
+                    cpSeparateBufToContigBuf(bufp + colb + s * bytes_per_sample,
+                                             tilebuf, nrow, tw, iskew, 0, spp,
+                                             bytes_per_sample);
+            }
+            colb += tilew * spp;
+        }
+        bufp += imagew * nrow;
+    }
+done:
+    _TIFFfree(tilebuf);
+    return status;
+}
+Please indicate your analysis with one of the options:
+ (1) YES: a security vulnerability is detected
+ (2) NO: no security vulnerability detected
+ Give your answer in the given format:
+Answer: ... (based off the options above)
+ Explanation: ...Let's think step-by-step.

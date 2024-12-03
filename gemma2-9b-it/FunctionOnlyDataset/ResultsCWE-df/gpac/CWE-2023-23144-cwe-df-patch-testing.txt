@@ -1,0 +1,18 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1.  `bs` (GF_BitStream)
+    2.  `NbBits` (u32)
+    3.  `NbComp` (u32)
+2. Sinks: 
+    1.  `return GF_NON_COMPLIANT_BITSTREAM`
+    2.  `return GF_BAD_PARAM`
+    3.  `m_ft[i]` (Fixed)
+    4.  `m_ft[orient]` (Fixed)
+    5.  `m_ft[(orient + i+1) % (NbComp+1)]` (Fixed)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+    1. ( `gf_bs_read_int(bs, NbBits)`, `value`,  `gf_bs_read_int` could potentially read more bytes than intended, leading to buffer overflow or integer overflow if `NbBits` is not properly validated. ) 
+5. Final Vulnerability analysis verdict: vulnerability: YES  
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound|
+| explanation: The line `value = gf_bs_read_int(bs, NbBits) - (1 << (NbBits-1))`  could result in an integer overflow if `gf_bs_read_int(bs, NbBits)`  reads a value larger than the maximum representable value for `s32` and subtracting `(1 << (NbBits-1))`  exceeds the maximum value. |

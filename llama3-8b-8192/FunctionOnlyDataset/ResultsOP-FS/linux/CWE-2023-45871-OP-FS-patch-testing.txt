@@ -1,0 +1,9 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+
+2. Explanation: 
+
+The vulnerability is due to potential out-of-bounds write in the function igb_set_rx_buffer_len. 
+
+The code is allocating memory for rx_ring based on the PAGE_SIZE. However, the PAGE_SIZE is not checked against the adapter->max_frame_size. If adapter->max_frame_size is greater than PAGE_SIZE, it can cause an out-of-bounds write.
+
+| CWE Name: CWE-125: Out-of-bounds Write

@@ -1,0 +1,121 @@
+System:
+You are a security expert in detecting Use After Free.
+Referencing memory after it has been freed can cause a program to crash, use unexpected values, or execute code.
+This is an example of vulnerable code:
+----VULNERABLE CODE START-----
+#include <stdio.h>
+#include <stdlib.h>
+
+char* data;
+
+void print_data() {
+    printf("%s\n", data);
+    free(data);
+    data = NULL;
+}
+
+void data_operation(char** words, int num_words) {
+    char* init_data = "Data: ";
+    int data_len = strlen(init_data);
+    for (int i = 0; i < num_words; i++) {
+        data_len += strlen(words[i]) + 1;
+    }
+    data = malloc(data_len);
+
+    for (int i = 0; i < num_words; i++) {
+        if (words[i] == "shit" || words[i] == "damn") {
+            free(data);
+            break;
+        }
+        strcat(data, words[i]);
+        strcat(data, " ");
+    }
+    print_data();
+}
+-----VULNERABLE CODE END-----
+
+-----EXPLANATION OF VULNERABILITY-----
+The variable `data` is allocated memory in the `data_operation` function and if the list of `words` includes ‘shit’ or ‘damn’ then it frees the `data` memory and breaks the loop. After it the `print_data` function is called where it accesses the `data` memory which is already been freed. This makes the program vulnerable to use-after-free vulnerability.
+-----EXPLANATION END-----
+
+This is an example of patched code:
+-----PATCHED CODE 1 START-----
+#include <stdio.h>
+#include <stdlib.h>
+
+char* data;
+
+void print_data() {
+    printf("%s\n", data);
+    free(data);
+    data = NULL;
+}
+
+void data_operation(char** words, int num_words) {
+    char* init_data = "Data: ";
+    int data_len = strlen(init_data);
+    for (int i = 0; i < num_words; i++) {
+        data_len += strlen(words[i]) + 1;
+    }
+    data = malloc(data_len);
+
+    for (int i = 0; i < num_words; i++) {
+        if (words[i] == "shit" || words[i] == "damn") {
+            break;
+        }
+        strcat(data, words[i]);
+        strcat(data, " ");
+    }
+    print_data();
+}
+-----PATCHED CODE 1 END-----
+
+-----EXPLANATION OF PATCH-----
+The variable `data` is allocated memory in the `data_operation` function and it is freed in the `print_data` function, after which `data` has not been used. So, there is no use-after-free vulnerability.
+-----EXPLANATION END-----
+
+
+Give your answer in the following structure:
+1. Vulnerability analysis: <YES, THERE IS A VULNERABILITY or NO, THERE IS NO VULNERABILITY>
+2. Explanation: <Leave as N/A if there is no vulnerability>
+| CWE Name: <Name of Vulnerability> |
+
+
+User:
+Please analyze the following code for Use After Free:
+
+--------------- START OF CODE ---------------
+static void l2cap_sock_cleanup_listen(struct sock *parent);
+
+static int l2cap_sock_release(struct socket *sock)
+{
+	struct sock *sk = sock->sk;
+	int err;
+	struct l2cap_chan *chan;
+
+	BT_DBG("sock %p, sk %p", sock, sk);
+
+	if (!sk)
+		return 0;
+
+	l2cap_sock_cleanup_listen(sk);
+	bt_sock_unlink(&l2cap_sk_list, sk);
+
+	err = l2cap_sock_shutdown(sock, SHUT_RDWR);
+	chan = l2cap_pi(sk)->chan;
+
+	l2cap_chan_hold(chan);
+	l2cap_chan_lock(chan);
+
+	sock_orphan(sk);
+	l2cap_sock_kill(sk);
+
+	l2cap_chan_unlock(chan);
+	l2cap_chan_put(chan);
+
+	return err;
+}
+--------------- END OF CODE ---------------
+
+Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Let�s think step-by-step

@@ -1,0 +1,10 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The vulnerability is an Out-of-bounds Write, specifically in the `kobject_set_name_vargs` function.
+
+The function `kobject_set_name_vargs` is used to set the name of a kobject. It uses `kvasprintf_const` to allocate memory for the name and then sets the `kobj->name` to the allocated memory.
+
+The issue is that `kvasprintf_const` may return a pointer to a string in the .rodata section, which is read-only. However, the function then checks if the name contains a '/' character and if so, it duplicates the string using `kstrdup`. This is necessary because the original string is read-only and cannot be modified.
+
+The problem is that the `kstrdup` call does not check the length of the original string. If the original string is longer than the allocated memory, it will overwrite adjacent memory locations, leading to an Out-of-bounds Write.
+
+| CWE Name: CWE-120 |

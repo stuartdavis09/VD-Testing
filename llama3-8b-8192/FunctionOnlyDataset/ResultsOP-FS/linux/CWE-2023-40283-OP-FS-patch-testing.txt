@@ -1,0 +1,4 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The variable `chan` is freed in the `l2cap_chan_put(chan)` call, but then it is used again in the `l2cap_pi(sk)->chan` call. This is an example of a use-after-free vulnerability.
+
+| CWE Name: CWE-416: Use After Free

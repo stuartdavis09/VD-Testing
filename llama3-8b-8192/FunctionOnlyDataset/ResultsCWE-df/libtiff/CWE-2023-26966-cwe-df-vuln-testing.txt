@@ -1,0 +1,19 @@
+Here is the output in the specified format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+    1. `u` (double)
+    2. `v` (double)
+    3. `em` (int)
+2. Sinks:
+    1. `oog_encode(u, v)` (unknown external API)
+    2. `uv_row[vi].ncum + ui` (integer)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+    1. (`u`, `oog_encode(u, v)`, `u` is a double value that is directly passed to an unknown external API without any sanitization)
+    2. (`v`, `oog_encode(u, v)`, `v` is a double value that is directly passed to an unknown external API without any sanitization)
+5. Final Vulnerability analysis verdict:
+    vulnerability: YES
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write|
+| explanation: The code snippet does not properly sanitize user input values `u` and `v` before passing them to the `oog_encode(u, v)` function, which could lead to an out-of-bounds write vulnerability.

@@ -1,0 +1,78 @@
+System:
+A security vulnerability refers to: The software performs a calculation that can produce an integer overflow or wraparound, when the logic assumes that the resulting value will always be larger than the original value. This can introduce other weaknesses when the calculation is used for resource management or execution control..
+Some vulnerable exemplars are shown in ['#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint add_nums(int num, int *nums)\n{\n    int sum = 0;\n    int i = 1;\n\n    while (sum < INT_MAX)\n    {\n        sum += nums[i];\n        i++;\n    }\n\n    printf("Sum is %d\\n", sum);\n    printf("i is %d\\n", i);\n\n    return sum;\n}', 'The user inputs a number of integers and they are added to another integer `sum` unless it becomes greater than `INT_MAX`. As `INT_MAX` is equal to the maximum value an integer can store, so if `sum` becomes greater than `INT_MAX` it will overflow and wrap around. This will make the while loop run for an infinite amount of iterations. The same will happen with integer `i`, it will also overflow if the loop runs `INT_MAX` times. So, the code is vulnerable to integer overflow. '].
+Patched versions of these are shown in ['#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint add_nums(int num, int *nums)\n{\n    int sum = 0;\n    int i = 1;\n\n    while (sum > INT_MAX - nums[i] || i <= num)\n    {\n        sum += nums[i];\n        i++;\n    }\n\n    printf("Sum is %d\\n", sum);\n    printf("i is %d\\n", i);\n\n    return 0;\n}', 'The user inputs a number of integers and they are added to another integer `sum` unless it becomes greater than `INT_MAX`. As `INT_MAX` is equal to the maximum value an integer can store, so if `sum` or `i` become greater than `INT_MAX` these will overflow and wrap around. To prevent that the while loop first checks if adding another integer crosses the `INT_MAX` limit of `sum` and `i` is less than the number of inputs given by the user, otherwise, it breaks the loop without adding another integer to it. So, the code is not vulnerable to integer overflow. '].
+
+
+
+User:
+Please analyze the following code and give an explanation:
+/* Type specific function prefix */
+#define HTYPE		hash_netportnet
+#define IP_SET_HASH_WITH_PROTO
+#define IP_SET_HASH_WITH_NETS
+#define IPSET_NET_COUNT 2
+#define IP_SET_HASH_WITH_NET0
+
+/* IPv4 variant */
+
+
+static int
+hash_netportnet4_kadt(struct ip_set *set, const struct sk_buff *skb,
+		      const struct xt_action_param *par,
+		      enum ipset_adt adt, struct ip_set_adt_opt *opt)
+{
+	const struct hash_netportnet4 *h = set->data;
+	ipset_adtfn adtfn = set->variant->adt[adt];
+	struct hash_netportnet4_elem e = { };
+	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
+
+	e.cidr[0] = INIT_CIDR(h->nets[0].cidr[0], HOST_MASK);
+	e.cidr[1] = INIT_CIDR(h->nets[0].cidr[1], HOST_MASK);
+	if (adt == IPSET_TEST)
+		e.ccmp = (HOST_MASK << (sizeof(e.cidr[0]) * 8)) | HOST_MASK;
+
+	if (!ip_set_get_ip4_port(skb, opt->flags & IPSET_DIM_TWO_SRC,
+				 &e.port, &e.proto))
+		return -EINVAL;
+
+	ip4addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip[0]);
+	ip4addrptr(skb, opt->flags & IPSET_DIM_THREE_SRC, &e.ip[1]);
+	e.ip[0] &= ip_set_netmask(e.cidr[0]);
+	e.ip[1] &= ip_set_netmask(e.cidr[1]);
+
+	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
+}
+
+static int
+hash_netportnet6_kadt(struct ip_set *set, const struct sk_buff *skb,
+		      const struct xt_action_param *par,
+		      enum ipset_adt adt, struct ip_set_adt_opt *opt)
+{
+	const struct hash_netportnet6 *h = set->data;
+	ipset_adtfn adtfn = set->variant->adt[adt];
+	struct hash_netportnet6_elem e = { };
+	struct ip_set_ext ext = IP_SET_INIT_KEXT(skb, opt, set);
+
+	e.cidr[0] = INIT_CIDR(h->nets[0].cidr[0], HOST_MASK);
+	e.cidr[1] = INIT_CIDR(h->nets[0].cidr[1], HOST_MASK);
+	if (adt == IPSET_TEST)
+		e.ccmp = (HOST_MASK << (sizeof(u8) * 8)) | HOST_MASK;
+
+	if (!ip_set_get_ip6_port(skb, opt->flags & IPSET_DIM_TWO_SRC,
+				 &e.port, &e.proto))
+		return -EINVAL;
+
+	ip6addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip[0].in6);
+	ip6addrptr(skb, opt->flags & IPSET_DIM_THREE_SRC, &e.ip[1].in6);
+	ip6_netmask(&e.ip[0], e.cidr[0]);
+	ip6_netmask(&e.ip[1], e.cidr[1]);
+
+	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
+}
+Please indicate your analysis with one of the options:
+ (1) YES: a security vulnerability is detected
+ (2) NO: no security vulnerability detected
+ Give your answer in the given format:
+Answer: ... (based off the options above)
+ Explanation: ...

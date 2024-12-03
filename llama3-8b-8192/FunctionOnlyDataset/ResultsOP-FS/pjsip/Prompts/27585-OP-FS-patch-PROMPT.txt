@@ -1,0 +1,394 @@
+System:
+You are a security expert in detecting Out-of-bounds Write.
+The software writes data past the end, or before the beginning, of the intended buffer.
+This is an example of vulnerable code:
+----VULNERABLE CODE START-----
+#include <stdio.h>
+#include <stdlib.h>
+
+char list[3][4] = {"shit", "damn", "fool"};
+char censored[3][5] = {"s***t", "d***n", "f***l"};
+
+char* lookup(char* word)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (word == list[i])
+        {
+            return censored[i];
+        }
+    }
+    return NULL;
+}
+
+char** censor_words(char** words, int num_words, int longest_word_length){
+    char** censored_words = (char**)malloc(num_words);
+    for (int i = 0; i < num_words; i++)
+    {
+        censored_words[i] = (char*)malloc(longest_word_length);
+    }
+
+    for (int i = 0; i < num_words; i++)
+    {
+        char* censor = lookup(words[i]);
+        if (censor != NULL)
+        {
+            censored_words[i] = censor;
+        }
+        else {
+            censored_words[i] = words[i];
+        }
+    }
+
+    return censored_words;
+}
+
+-----VULNERABLE CODE END-----
+
+-----EXPLANATION OF VULNERABILITY-----
+The `censored_words` array is allocated based on the length of the longest word from the user input `words`. But later if any word is present in `list` it is replaced by a censored version of that word. If the longest_word_length is 4 and the array `words` contains any of the words from `list` it will be replaced by its `censored` word that has a length of 5, causing an out-of-bound write. So, the code is vulnerable to out-of-bound write.
+-----EXPLANATION END-----
+
+This is an example of patched code:
+-----PATCHED CODE 1 START-----
+#include <stdio.h>
+#include <stdlib.h>
+
+char list[3][4] = {"shit", "damn", "fool"};
+char censored[3][5] = {"s***t", "d***n", "f***l"};
+int longest_censored_word_length = 5;
+
+char* lookup(char* word)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (word == list[i])
+        {
+            return censored[i];
+        }
+    }
+    return NULL;
+}
+
+char** censor_words(char** words, int num_words, int longest_word_length){
+    char** censored_words = (char**)malloc(num_words);
+    for (int i = 0; i < num_words; i++)
+    {
+        censored_words[i] = (char*)malloc(max(longest_censored_word_length, longest_word_length));
+    }
+
+    for (int i = 0; i < num_words; i++)
+    {
+        char* censor = lookup(words[i]);
+        if (censor != NULL)
+        {
+            censored_words[i] = censor;
+        }
+        else {
+            censored_words[i] = words[i];
+        }
+    }
+
+    return censored_words;
+}
+
+-----PATCHED CODE 1 END-----
+
+-----EXPLANATION OF PATCH-----
+The `censored_words` array is allocated based on the length of the longest word from both the `censored` list and the user input `words`. So, later any word from `words` or `censored` cannot exceed the allocated memory bound, protecting it from an out-of-bound write. So, the code is not vulnerable to out-of-bound write. 
+-----EXPLANATION END-----
+
+
+Give your answer in the following structure:
+1. Vulnerability analysis: <YES, THERE IS A VULNERABILITY or NO, THERE IS NO VULNERABILITY>
+2. Explanation: <Leave as N/A if there is no vulnerability>
+| CWE Name: <Name of Vulnerability> |
+
+
+User:
+Please analyze the following code for Out-of-bounds Write:
+
+--------------- START OF CODE ---------------
+static pj_status_t get_name_len(int rec_counter, const pj_uint8_t *pkt, 
+                                const pj_uint8_t *start, const pj_uint8_t *max, 
+                                int *parsed_len, int *name_len)
+{
+    const pj_uint8_t *p;
+    pj_status_t status;
+
+    /* Limit the number of recursion */
+    if (rec_counter > 10) {
+        /* Too many name recursion */
+        return PJLIB_UTIL_EDNSINNAMEPTR;
+    }
+
+    if (start >= max)
+        return PJLIB_UTIL_EDNSINNAMEPTR;
+
+    *name_len = *parsed_len = 0;
+    p = start;
+    while (*p) {
+        if ((*p & 0xc0) == 0xc0) {
+            /* Compression is found! */
+            int ptr_len = 0;
+            int dummy;
+            pj_uint16_t offset;
+
+            /* Get the 14bit offset */
+            pj_memcpy(&offset, p, 2);
+            offset ^= pj_htons((pj_uint16_t)(0xc0 << 8));
+            offset = pj_ntohs(offset);
+
+            /* Check that offset is valid */
+            if (offset >= max - pkt)
+                return PJLIB_UTIL_EDNSINNAMEPTR;
+
+            /* Get the name length from that offset. */
+            status = get_name_len(rec_counter+1, pkt, pkt + offset, max, 
+                                  &dummy, &ptr_len);
+            if (status != PJ_SUCCESS)
+                return status;
+
+            *parsed_len += 2;
+            *name_len += ptr_len;
+
+            return PJ_SUCCESS;
+        } else {
+            unsigned label_len = *p;
+
+            /* Check that label length is valid.
+             * Each label consists of an octet length (of size 1) followed
+             * by the octet of the specified length (label_len). Then it
+             * must be followed by either another label's octet length or
+             * a zero length octet (that terminates the sequence).
+             */
+            if (p+1+label_len+1 > max)
+                return PJLIB_UTIL_EDNSINNAMEPTR;
+
+            p += (label_len + 1);
+            *parsed_len += (label_len + 1);
+
+            if (*p != 0)
+                ++label_len;
+            
+            *name_len += label_len;
+        }
+    }
+    ++p;
+    (*parsed_len)++;
+
+    return PJ_SUCCESS;
+}
+
+
+static pj_status_t get_name(int rec_counter, const pj_uint8_t *pkt, 
+                            const pj_uint8_t *start, const pj_uint8_t *max,
+                            pj_str_t *name)
+{
+    const pj_uint8_t *p;
+    pj_status_t status;
+
+    /* Limit the number of recursion */
+    if (rec_counter > 10) {
+        /* Too many name recursion */
+        return PJLIB_UTIL_EDNSINNAMEPTR;
+    }
+
+    if (start >= max)
+        return PJLIB_UTIL_EDNSINNAMEPTR;
+
+    p = start;
+    while (*p) {
+        if ((*p & 0xc0) == 0xc0) {
+            /* Compression is found! */
+            pj_uint16_t offset;
+
+            /* Get the 14bit offset */
+            pj_memcpy(&offset, p, 2);
+            offset ^= pj_htons((pj_uint16_t)(0xc0 << 8));
+            offset = pj_ntohs(offset);
+
+            /* Check that offset is valid */
+            if (offset >= max - pkt)
+                return PJLIB_UTIL_EDNSINNAMEPTR;
+
+            /* Retrieve the name from that offset. */
+            status = get_name(rec_counter+1, pkt, pkt + offset, max, name);
+            if (status != PJ_SUCCESS)
+                return status;
+
+            return PJ_SUCCESS;
+        } else {
+            unsigned label_len = *p;
+
+            /* Check that label length is valid.
+             * Each label consists of an octet length (of size 1) followed
+             * by the octet of the specified length (label_len). Then it
+             * must be followed by either another label's octet length or
+             * a zero length octet (that terminates the sequence).
+             */
+            if (p+1+label_len+1 > max)
+                return PJLIB_UTIL_EDNSINNAMEPTR;
+
+            pj_memcpy(name->ptr + name->slen, p+1, label_len);
+            name->slen += label_len;
+
+            p += label_len + 1;
+            if (*p != 0) {
+                *(name->ptr + name->slen) = '.';
+                ++name->slen;
+            }
+        }
+    }
+
+    return PJ_SUCCESS;
+}
+
+
+static pj_status_t parse_rr(pj_dns_parsed_rr *rr, pj_pool_t *pool,
+                            const pj_uint8_t *pkt,
+                            const pj_uint8_t *start, const pj_uint8_t *max,
+                            int *parsed_len)
+{
+    const pj_uint8_t *p = start;
+    int name_len, name_part_len;
+    pj_status_t status;
+
+    /* Get the length of the name */
+    status = get_name_len(0, pkt, start, max, &name_part_len, &name_len);
+    if (status != PJ_SUCCESS)
+        return status;
+
+    /* Allocate memory for the name */
+    rr->name.ptr = (char*) pj_pool_alloc(pool, name_len+4);
+    rr->name.slen = 0;
+
+    /* Get the name */
+    status = get_name(0, pkt, start, max, &rr->name);
+    if (status != PJ_SUCCESS)
+        return status;
+
+    p = (start + name_part_len);
+
+    /* Check the size can accomodate next few fields. */
+    if (p+10 > max)
+        return PJLIB_UTIL_EDNSINSIZE;
+
+    /* Get the type */
+    pj_memcpy(&rr->type, p, 2);
+    rr->type = pj_ntohs(rr->type);
+    p += 2;
+    
+    /* Get the class */
+    pj_memcpy(&rr->dnsclass, p, 2);
+    rr->dnsclass = pj_ntohs(rr->dnsclass);
+    p += 2;
+
+    /* Class MUST be IN */
+    if (rr->dnsclass != 1) {
+        /* Class is not IN, return error only if type is known (see #1889) */
+        if (rr->type == PJ_DNS_TYPE_A     || rr->type == PJ_DNS_TYPE_AAAA  ||
+            rr->type == PJ_DNS_TYPE_CNAME || rr->type == PJ_DNS_TYPE_NS    ||
+            rr->type == PJ_DNS_TYPE_PTR   || rr->type == PJ_DNS_TYPE_SRV)
+        {
+            return PJLIB_UTIL_EDNSINCLASS;
+        }
+    }
+
+    /* Get TTL */
+    pj_memcpy(&rr->ttl, p, 4);
+    rr->ttl = pj_ntohl(rr->ttl);
+    p += 4;
+
+    /* Get rdlength */
+    pj_memcpy(&rr->rdlength, p, 2);
+    rr->rdlength = pj_ntohs(rr->rdlength);
+    p += 2;
+
+    /* Check that length is valid */
+    if (p + rr->rdlength > max)
+        return PJLIB_UTIL_EDNSINSIZE;
+
+    /* Parse some well known records */
+    if (rr->type == PJ_DNS_TYPE_A) {
+        if (p + 4 > max)
+            return PJLIB_UTIL_EDNSINSIZE;
+        pj_memcpy(&rr->rdata.a.ip_addr, p, 4);
+        p += 4;
+
+    } else if (rr->type == PJ_DNS_TYPE_AAAA) {
+        if (p + 16 > max)
+            return PJLIB_UTIL_EDNSINSIZE;
+        pj_memcpy(&rr->rdata.aaaa.ip_addr, p, 16);
+        p += 16;
+
+    } else if (rr->type == PJ_DNS_TYPE_CNAME ||
+               rr->type == PJ_DNS_TYPE_NS ||
+               rr->type == PJ_DNS_TYPE_PTR) 
+    {
+
+        /* Get the length of the target name */
+        status = get_name_len(0, pkt, p, max, &name_part_len, &name_len);
+        if (status != PJ_SUCCESS)
+            return status;
+
+        /* Allocate memory for the name */
+        rr->rdata.cname.name.ptr = (char*) pj_pool_alloc(pool, name_len);
+        rr->rdata.cname.name.slen = 0;
+
+        /* Get the name */
+        status = get_name(0, pkt, p, max, &rr->rdata.cname.name);
+        if (status != PJ_SUCCESS)
+            return status;
+
+        p += name_part_len;
+
+    } else if (rr->type == PJ_DNS_TYPE_SRV) {
+        if (p + 6 > max)
+            return PJLIB_UTIL_EDNSINSIZE;
+
+        /* Priority */
+        pj_memcpy(&rr->rdata.srv.prio, p, 2);
+        rr->rdata.srv.prio = pj_ntohs(rr->rdata.srv.prio);
+        p += 2;
+
+        /* Weight */
+        pj_memcpy(&rr->rdata.srv.weight, p, 2);
+        rr->rdata.srv.weight = pj_ntohs(rr->rdata.srv.weight);
+        p += 2;
+
+        /* Port */
+        pj_memcpy(&rr->rdata.srv.port, p, 2);
+        rr->rdata.srv.port = pj_ntohs(rr->rdata.srv.port);
+        p += 2;
+        
+        /* Get the length of the target name */
+        status = get_name_len(0, pkt, p, max, &name_part_len, &name_len);
+        if (status != PJ_SUCCESS)
+            return status;
+
+        /* Allocate memory for the name */
+        rr->rdata.srv.target.ptr = (char*) pj_pool_alloc(pool, name_len);
+        rr->rdata.srv.target.slen = 0;
+
+        /* Get the name */
+        status = get_name(0, pkt, p, max, &rr->rdata.srv.target);
+        if (status != PJ_SUCCESS)
+            return status;
+        p += name_part_len;
+
+    } else {
+        /* Copy the raw data */
+        rr->data = pj_pool_alloc(pool, rr->rdlength);
+        pj_memcpy(rr->data, p, rr->rdlength);
+
+        p += rr->rdlength;
+    }
+
+    *parsed_len = (int)(p - start);
+    return PJ_SUCCESS;
+}
+--------------- END OF CODE ---------------
+
+Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Let’s think step-by-step

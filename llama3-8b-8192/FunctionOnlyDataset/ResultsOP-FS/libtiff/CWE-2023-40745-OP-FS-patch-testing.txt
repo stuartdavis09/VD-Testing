@@ -1,0 +1,6 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: 
+
+The vulnerability is due to an integer overflow in the line `iskew = imagew - tilew * spp;` where `iskew` is an integer and `imagew`, `tilew`, and `spp` are all unsigned integers. If `tilew * spp` is greater than `INT_MAX`, then `iskew` will wrap around and become a large negative number. This can cause issues in the subsequent code that uses `iskew`.
+
+CWE Name: CWE-190: Integer Overflow or Wraparound

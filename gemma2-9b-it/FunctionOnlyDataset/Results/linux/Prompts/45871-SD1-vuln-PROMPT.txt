@@ -1,0 +1,32 @@
+System:
+A security vulnerability refers to: The software writes data past the end, or before the beginning, of the intended buffer..
+
+
+
+User:
+Please analyze the following code and give an explanation:
+static void igb_set_rx_buffer_len(struct igb_adapter *adapter,
+				  struct igb_ring *rx_ring)
+{
+	/* set build_skb and buffer size flags */
+	clear_ring_build_skb_enabled(rx_ring);
+	clear_ring_uses_large_buffer(rx_ring);
+
+	if (adapter->flags & IGB_FLAG_RX_LEGACY)
+		return;
+
+	set_ring_build_skb_enabled(rx_ring);
+
+#if (PAGE_SIZE < 8192)
+	if (adapter->max_frame_size <= IGB_MAX_FRAME_BUILD_SKB)
+        return;
+    
+    set_ring_uses_large_buffer(rx_ring);
+#endif
+}
+Please indicate your analysis with one of the options:
+ (1) YES: a security vulnerability is detected
+ (2) NO: no security vulnerability detected
+ Give your answer in the given format:
+Answer: ... (based off the options above)
+ Explanation: ...

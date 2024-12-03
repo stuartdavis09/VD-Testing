@@ -1,0 +1,6 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The vulnerability is a NULL pointer dereference in the function _TIFFCleanup().
+
+In the function _TIFFCleanup(), there is a call to _TIFFfreeExt(NULL, tif) which tries to free the memory pointed to by the pointer tif, but tif is NULL. This can cause a NULL pointer dereference.
+
+CWE Name: CWE-476: NULL Pointer Dereference

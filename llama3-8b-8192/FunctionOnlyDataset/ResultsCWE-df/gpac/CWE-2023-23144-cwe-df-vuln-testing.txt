@@ -1,0 +1,30 @@
+Here is the output in the specified format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* NbComp
+	* NbBits
+	* bs
+	* i
+	* dir
+	* orient
+	* value
+	* sign
+2. Sinks:
+	* m_ft
+	* delta
+	* GF_OK
+	* GF_BAD_PARAM
+	* GF_NON_COMPLIANT_BITSTREAM
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+	* (bs, m_ft, unsanitized data from unknown external API)
+	* (gf_bs_read_int(bs, NbBits), m_ft, unsanitized data from unknown external API)
+	* (gf_mulfix(GF_PI/4, m_ft[i]), tang[i], unsanitized data from unknown external API)
+	* (gf_tan(gf_mulfix(GF_PI/4, m_ft[i])), tang[i], unsanitized data from unknown external API)
+	* (delta, m_ft, unsanitized data from unknown external API)
+5. Final Vulnerability analysis verdict:
+| vulnerability: YES |
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound |
+| explanation: The code uses signed integers (s32) for some calculations, and there are several places where unsanitized data from unknown external APIs (gf_bs_read_int, gf_mulfix, gf_tan) is used. This could potentially lead to integer overflow or wraparound vulnerabilities.

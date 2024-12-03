@@ -1,0 +1,17 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources:
+	* `adapter->max_frame_size`
+	* `rd32(E1000_RCTL)`
+2. Sinks:
+	* `set_ring_uses_large_buffer(rx_ring)`
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+	* (`adapter->max_frame_size`, `set_ring_uses_large_buffer(rx_ring)`, `adapter->max_frame_size` is an unsanitized input from an unknown source)
+	* (`rd32(E1000_RCTL)`, `set_ring_uses_large_buffer(rx_ring)`, `rd32(E1000_RCTL)` is an unsanitized call to an unknown external API)
+5. Final Vulnerability analysis verdict:
+vulnerability: YES
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write|
+| explanation: The `adapter->max_frame_size` variable is not sanitized and can be controlled by an attacker. Similarly, the `rd32(E1000_RCTL)` call is an unsanitized call to an unknown external API, which can also be controlled by an attacker. This can lead to an out-of-bounds write vulnerability.

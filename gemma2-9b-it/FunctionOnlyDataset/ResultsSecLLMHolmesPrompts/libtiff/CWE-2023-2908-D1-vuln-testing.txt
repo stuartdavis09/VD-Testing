@@ -1,0 +1,52 @@
+Answer: YES 
+
+Explanation: 
+
+The code has the potential for a NULL Pointer Dereference vulnerability.  Here's why:
+
+* **Potential for `cp` to point to NULL:** The `while (cp < ep)` loop iterates as long as `cp` is less than `ep`. If the input string `s` is malformed (e.g., doesn't have a null terminator), `cp` could potentially reach the end of the allocated memory and continue past it.  
+* **Dereferencing `*cp`:** Inside the loop, the code uses `*cp` to access the character at the current position of `cp`. If `cp` is pointing to an invalid memory location (NULL), dereferencing it will lead to a crash or unexpected behavior. This is a classic NULL Pointer Dereference vulnerability.
+
+**How it could be exploited:**
+
+An attacker could craft a malicious input string that intentionally lacks a null terminator or has other formatting issues. When this string is passed to the `countInkNamesString` function, `cp` might end up pointing to NULL, causing a crash or potentially allowing the attacker to execute arbitrary code.
+
+
+**Mitigation:**
+
+To fix this vulnerability, the code should include robust bounds checking to ensure that `cp` always stays within the valid bounds of the input string.  Here's a safer version:
+
+```c
+static uint16_t countInkNamesString(TIFF *tif, uint32_t slen, const char *s)
+{
+    uint16_t i = 0;
+    const char *ep = s + slen;
+    const char *cp = s;
+
+    if (slen > 0)
+    {
+        do
+        {
+            for (; cp < ep && *cp != '\0'; cp++)
+            {
+                // No change needed here
+            }
+            if (cp >= ep) 
+            {
+                goto bad;
+            }
+            cp++; /* skip \0 */
+            i++;
+        } while (cp < ep);
+        return (i);
+    }
+bad:
+    TIFFErrorExtR(tif, "TIFFSetField",
+                  "%s: Invalid InkNames value; no NUL at given buffer end "
+                  "location %" PRIu32 ", after %" PRIu16 " ink",
+                  tif->tif_name, slen, i);
+    return (0);
+}
+```
+
+

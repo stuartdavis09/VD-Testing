@@ -1,0 +1,38 @@
+System:
+You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Please provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.
+<OUTPUT FORMAT>
+Data flow analysis of the given code snippet:
+1. Sources: <numbered list of input sources>
+2. Sinks: <numbered list of output sinks>
+3. Sanitizers: <numbered list of sanitizers, if any>
+4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>
+5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write|
+| explanation: <explanation for prediction>|
+
+
+User:
+ Is the following code snippet prone to Out-of-bounds Write
+#if !LOGLUV_PUBLIC
+static
+#endif
+    int
+    uv_encode(double u, double v, int em) /* encode (u',v') coordinates */
+{
+    register int vi, ui;
+
+    if (v < UV_VSTART)
+        return oog_encode(u, v);
+    vi = tiff_itrunc((v - UV_VSTART) * (1. / UV_SQSIZ), em);
+    if (vi >= UV_NVS)
+        return oog_encode(u, v);
+    if (u < uv_row[vi].ustart)
+        return oog_encode(u, v);
+    ui = tiff_itrunc((u - uv_row[vi].ustart) * (1. / UV_SQSIZ), em);
+    if (ui >= uv_row[vi].nus)
+        return oog_encode(u, v);
+
+    return (uv_row[vi].ncum + ui);
+}?

@@ -1,0 +1,22 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources: 
+	* set
+	* skb
+	* par
+	* adt
+	* opt
+	* h
+	* HOST_MASK
+2. Sinks: 
+	* adtfn(set, &e, &ext, &opt->ext, opt->cmdflags)
+3. Sanitizers: 
+	* ip_set_get_ip4_port
+	* ip_set_get_ip6_port
+4. Unsanitized Data Flows: 
+	* (HOST_MASK, adtfn(set, &e, &ext, &opt->ext, opt->cmdflags), HOST_MASK is used in the calculation of e.ccmp, which could lead to integer overflow or wraparound)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound|
+| explanation: The HOST_MASK value is used in the calculation of e.ccmp, which could lead to integer overflow or wraparound if the value of HOST_MASK is large.

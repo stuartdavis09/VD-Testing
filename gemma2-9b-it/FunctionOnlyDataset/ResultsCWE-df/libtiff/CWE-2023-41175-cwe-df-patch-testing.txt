@@ -1,0 +1,45 @@
+Data flow analysis of the given code snippet:
+1. Sources:
+    1. `optarg` (from `getopt`)
+    2. `argv[optind]`
+    3. `argv[optind]`
+2. Sinks:
+    1. `atoi(optarg)` (in `rowsperstrip = atoi(optarg);`)
+    2. `atoi(optarg)` (in `hdr_size = atoi(optarg);`)
+    3. `atoi(optarg)` (in `width = atoi(optarg);`)
+    4. `atoi(optarg)` (in `length = atoi(optarg);`)
+    5. `atoi(optarg)` (in `nbands = atoi(optarg);`)
+    6. `TIFFOpen(outfilename, "w")`
+    7. `TIFFSetField(out, TIFFTAG_IMAGEWIDTH, width)`
+    8. `TIFFSetField(out, TIFFTAG_IMAGELENGTH, length)`
+    9. `TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT)`
+    10. `TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, nbands)`
+    11. `TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, depth * 8)`
+    12. `TIFFSetField(out, TIFFTAG_FILLORDER, fillorder)`
+    13. `TIFFSetField(out, TIFFTAG_PLANARCONFIG, config)`
+    14. `TIFFSetField(out, TIFFTAG_PHOTOMETRIC, photometric)`
+    15. `TIFFSetField(out, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT)`
+    16. `TIFFSetField(out, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_INT)`
+    17. `TIFFSetField(out, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_IEEEFP)`
+    18. `TIFFSetField(out, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_VOID)`
+    19. `TIFFSetField(out, TIFFTAG_COMPRESSION, compression)`
+    20. `TIFFSetField(out, TIFFTAG_JPEGQUALITY, quality)`
+    21. `TIFFSetField(out, TIFFTAG_JPEGCOLORMODE, jpegcolormode)`
+    22. `TIFFSetField(out, TIFFTAG_PREDICTOR, predictor)`
+    23. `TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, rowsperstrip)`
+    24. `_TIFF_lseek_f(fd, hdr_size + (length * band + row) * linebytes, SEEK_SET)`
+    25. `read(fd, buf, linebytes)`
+    26. `memcpy(buf1 + (col * nbands + band) * depth, buf + col * depth, depth)`
+    27. `TIFFWriteScanline(out, buf1, row, 0)`
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+    1. ( `optarg` , `atoi(optarg)` ,  Potential integer overflow if the input to `atoi` is too large)
+    2. ( `argv[optind]` , `open(argv[optind], O_RDONLY | O_BINARY, 0)` ,  Potential for buffer overflow if the input filename is too long)
+    3. ( `argv[optind]` , `fprintf(stderr, "%s: %s: Cannot open input file.\n", argv[0], argv[optind])` ,  Potential for format string vulnerability if `argv[optind]` is not properly sanitized)
+    4. ( `argv[optind]` , `fprintf(stderr, "%s: %s: scanline %" PRIu32 ": seek error.\n", argv[0], argv[optind], row)` ,  Potential for format string vulnerability if `argv[optind]` is not properly sanitized)
+    5. ( `argv[optind]` , `fprintf(stderr, "%s: %s: scanline %" PRIu32 ": Read error.\n", argv[0], argv[optind], row)` ,  Potential for format string vulnerability if `argv[optind]` is not properly sanitized)
+    6. ( `argv[0]` , `fprintf(stderr, "%s: %s: Cannot open file for output.\n", argv[0], outfilename)` ,  Potential for format string vulnerability if `argv[0]` is not properly sanitized)
+    7. ( `argv[0]` , `fprintf(stderr, "%s: %s: scanline %" PRIu32 ": Write error.\n", argv[0], outfilename, row)` ,  Potential for format string vulnerability if `argv[0]` is not properly sanitized)
+
+5. Final Vulnerability analysis verdict: vulnerability: YES
+

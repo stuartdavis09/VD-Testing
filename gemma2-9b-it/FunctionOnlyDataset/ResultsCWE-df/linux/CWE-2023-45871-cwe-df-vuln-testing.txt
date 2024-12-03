@@ -1,0 +1,18 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. adapter->flags
+    2. adapter->max_frame_size
+2. Sinks: 
+    1. clear_ring_build_skb_enabled(rx_ring)
+    2. clear_ring_uses_large_buffer(rx_ring)
+    3. set_ring_build_skb_enabled(rx_ring)
+    4. set_ring_uses_large_buffer(rx_ring)
+3. Sanitizers: N/A
+4. Unsanitized Data Flows: 
+    1. (adapter->max_frame_size, set_ring_uses_large_buffer(rx_ring),  adapter->max_frame_size is not sanitized before being compared to IGB_MAX_FRAME_BUILD_SKB, leading to a potential out-of-bounds write if adapter->max_frame_size is larger)
+5. Final Vulnerability analysis verdict: vulnerability: YES 
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write|
+| explanation: The code snippet checks if `adapter->max_frame_size` is less than or equal to `IGB_MAX_FRAME_BUILD_SKB`. If it is, it sets the `ring_uses_large_buffer` flag. However, there is no check to ensure that `adapter->max_frame_size` is within a valid range. If `adapter->max_frame_size` is larger than the expected maximum, it could lead to an out-of-bounds write when allocating memory for the receive buffer. | 
+
+

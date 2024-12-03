@@ -1,0 +1,34 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. `spp`
+    2. `imagew`
+    3. `tilew`
+    4. `imagelength`
+    5. `imagewidth`
+    6. `spp`
+    7. `bps`
+    8. `tilebuf`
+    9. `nrow`
+    10. `colb`
+    11. `tw`
+    12. `tl`
+    13. `bps`
+12. Sinks: 
+    1. `TIFFError(TIFFFileName(in), "Error, cannot handle that much samples per tile row (Tile Width * Samples/Pixel)")`
+    2. `TIFFError(TIFFFileName(in), "Error, cannot read BitsPerSample")`
+    3. `TIFFError(TIFFFileName(in), "Error, cannot handle BitsPerSample that is not a multiple of 8")`
+    4. `TIFFError(TIFFFileName(in), "Error, can't read tile at %" PRIu32 " %" PRIu32 ", sample %" PRIu16, col, row, s)`
+    5. `cpSeparateBufToContigBuf(bufp + colb + s * bytes_per_sample, tilebuf, nrow, width / (spp * bytes_per_sample), oskew + iskew, oskew / spp, spp, bytes_per_sample)`
+    6. `cpSeparateBufToContigBuf(bufp + colb + s * bytes_per_sample, tilebuf, nrow, tw, iskew, 0, spp, bytes_per_sample)`
+    7. `_TIFFfree(tilebuf)`
+3. Sanitizers: 
+    N/A
+4. Unsanitized Data Flows: 
+    1. (`spp`, `TIFFError(TIFFFileName(in), "Error, cannot handle that much samples per tile row (Tile Width * Samples/Pixel)")`, `spp` is not sanitized before being used in the calculation that triggers the error message. This could lead to integer overflow if `spp` is large enough`)
+    2. (`spp`, `TIFFError(TIFFFileName(in), "Error, cannot handle that much samples per tile row (Tile Width * Samples/Pixel)")`, `spp` is not sanitized before being used in the calculation that triggers the error message. This could lead to integer overflow if `spp` is large enough`)
+    3. (`tilew`, `TIFFError(TIFFFileName(in), "Error, cannot handle that much samples per tile row (Tile Width * Samples/Pixel)")`, `tilew` is not sanitized before being used in the calculation that triggers the error message. This could lead to integer overflow if `tilew` is large enough`)
+    4. (`spp`, `cpSeparateBufToContigBuf(bufp + colb + s * bytes_per_sample, tilebuf, nrow, width / (spp * bytes_per_sample), oskew + iskew, oskew / spp, spp, bytes_per_sample)`, `spp` is used in calculations within the `cpSeparateBufToContigBuf` function without being sanitized. This could lead to integer overflow if `spp` is large enough`)
+    5. (`spp`, `cpSeparateBufToContigBuf(bufp + colb + s * bytes_per_sample, tilebuf, nrow, tw, iskew, 0, spp, bytes_per_sample)`, `spp` is used in calculations within the `cpSeparateBufToContigBuf` function without being sanitized. This could lead to integer overflow if `spp` is large enough`)
+5. Final Vulnerability analysis verdict: vulnerability: YES 
+
+

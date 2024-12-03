@@ -1,0 +1,73 @@
+Data flow analysis of the given code snippet:
+1. Sources:
+- gf_bs_read_ue_log(bs, "first_mb_in_slice")
+- gf_bs_read_ue_log(bs, "slice_type")
+- gf_bs_read_ue_log(bs, "pps_id")
+- gf_bs_read_int_log(bs, si->sps->log2_max_frame_num, "frame_num")
+- gf_bs_read_int_log(bs, 1, "field_pic_flag")
+- gf_bs_read_int_log(bs, 1, "bottom_field_flag")
+- gf_bs_read_ue_log(bs, "idr_pic_id")
+- gf_bs_read_int_log(bs, si->sps->log2_max_poc_lsb, "poc_lsb")
+- gf_bs_read_se_log(bs, "poc_lsb")
+- gf_bs_read_se_log(bs, "delta_poc0")
+- gf_bs_read_se_log(bs, "delta_poc1")
+- gf_bs_read_ue_log(bs, "redundant_pic_cnt")
+- gf_bs_read_int_log(bs, 1, "num_ref_idx_active_override_flag")
+- gf_bs_read_ue_log(bs, "num_ref_idx_l0_active_minus1")
+- gf_bs_read_ue_log(bs, "num_ref_idx_l1_active_minus1")
+- gf_bs_read_ue_log(bs, "cabac_init_idc")
+- gf_bs_read_se(bs)
+- gf_bs_read_int_log(bs, 1, "sp_for_switch_flag")
+- gf_bs_read_se_log(bs, "slice_qs_delta")
+- gf_bs_read_ue_log(bs, "disable_deblocking_filter_idc")
+- gf_bs_read_se_log(bs, "slice_alpha_c0_offset_div2")
+- gf_bs_read_se_log(bs, "slice_beta_offset_div2")
+- gf_bs_read_int_log(bs, (u32)ceil(log1p((si->pps->pic_size_in_map_units_minus1 + 1) / (si->pps->slice_group_change_rate_minus1 + 1) ) / log(2)), "slice_group_change_cycle")
+2. Sinks:
+- si->slice_type
+- pps_id
+- si->pps
+- si->sps
+- si->frame_num
+- si->field_pic_flag
+- si->bottom_field_flag
+- si->idr_pic_id
+- si->poc_lsb
+- si->delta_poc_bottom
+- si->delta_poc[0]
+- si->delta_poc[1]
+- si->redundant_pic_cnt
+- num_ref_idx_l0_active_minus1
+- num_ref_idx_l1_active_minus1
+- slice_qp_delta
+- si->slice_qs_delta
+- si->pps->slice_group_change_rate_minus1
+- si->pps->mb_slice_group_map_type
+- si->pps->pic_size_in_map_units_minus1
+3. Sanitizers: N/A
+4. Unsanitized Data Flows:
+- (gf_bs_read_ue_log(bs, "pps_id"), si->pps, The code assumes that pps_id is within the valid range [0, 255]. However, this assumption is not enforced by any sanitizers, making it vulnerable to potential out-of-bounds access if pps_id is not within the valid range. )
+- (gf_bs_read_ue_log(bs, "pps_id"), si->pps->sps_id, The code assumes that pps_id is within the valid range [0, 255]. However, this assumption is not enforced by any sanitizers, making it vulnerable to potential out-of-bounds access if pps_id is not within the valid range. )
+- (gf_bs_read_int_log(bs, si->sps->log2_max_frame_num, "frame_num"), si->frame_num, The code assumes that the input to gf_bs_read_int_log is within the valid range determined by si->sps->log2_max_frame_num. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_int_log(bs, 1, "field_pic_flag"), si->field_pic_flag, The code assumes that the input to gf_bs_read_int_log is within the valid range [0, 1]. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_int_log(bs, 1, "bottom_field_flag"), si->bottom_field_flag, The code assumes that the input to gf_bs_read_int_log is within the valid range [0, 1]. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_int_log(bs, si->sps->log2_max_poc_lsb, "poc_lsb"), si->poc_lsb, The code assumes that the input to gf_bs_read_int_log is within the valid range determined by si->sps->log2_max_poc_lsb. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_se_log(bs, "poc_lsb"), si->delta_poc_bottom, The code assumes that the input to gf_bs_read_se_log is within the valid range determined by si->sps->log2_max_poc_lsb. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_se_log(bs, "delta_poc0"), si->delta_poc[0], The code assumes that the input to gf_bs_read_se_log is within the valid range determined by si->sps->log2_max_poc_lsb. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_se_log(bs, "delta_poc1"), si->delta_poc[1], The code assumes that the input to gf_bs_read_se_log is within the valid range determined by si->sps->log2_max_poc_lsb. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_ue_log(bs, "num_ref_idx_l0_active_minus1"), num_ref_idx_l0_active_minus1, The code assumes that the input to gf_bs_read_ue_log is within the valid range determined by si->pps->num_ref_idx_l0_default_active_minus1. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_ue_log(bs, "num_ref_idx_l1_active_minus1"), num_ref_idx_l1_active_minus1, The code assumes that the input to gf_bs_read_ue_log is within the valid range determined by si->pps->num_ref_idx_l1_default_active_minus1. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_se(bs), slice_qp_delta, The code does not explicitly define a valid range for slice_qp_delta, making it vulnerable to potential out-of-bounds access if the input is not within a reasonable range. )
+- (gf_bs_read_int_log(bs, 1, "sp_for_switch_flag"), si->slice_qs_delta, The code assumes that the input to gf_bs_read_int_log is within the valid range [0, 1]. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_se_log(bs, "slice_qs_delta"), si->slice_qs_delta, The code does not explicitly define a valid range for si->slice_qs_delta, making it vulnerable to potential out-of-bounds access if the input is not within a reasonable range. )
+- (gf_bs_read_ue_log(bs, "disable_deblocking_filter_idc"), si->pps->deblocking_filter_control_present_flag, The code assumes that the input to gf_bs_read_ue_log is within the valid range [0, 1]. However, this assumption is not explicitly verified, making it vulnerable to potential out-of-bounds access if the input is not within the valid range. )
+- (gf_bs_read_se_log(bs, "slice_alpha_c0_offset_div2"), si->pps->deblocking_filter_control_present_flag, The code does not explicitly define a valid range for si->pps->deblocking_filter_control_present_flag, making it vulnerable to potential out-of-bounds access if the input is not within a reasonable range. )
+- (gf_bs_read_se_log(bs, "slice_beta_offset_div2"), si->pps->deblocking_filter_control_present_flag, The code does not explicitly define a valid range for si->pps->deblocking_filter_control_present_flag, making it vulnerable to potential out-of-bounds access if the input is not within a reasonable range. )
+- (gf_bs_read_int_log(bs, (u32)ceil(log1p((si->pps->pic_size_in_map_units_minus1 + 1) / (si->pps->slice_group_change_rate_minus1 + 1) / log(2)), "slice_group_change_cycle"), si->pps->slice_group_change_rate_minus1, The code does not explicitly define a valid range for si->pps->slice_group_change_rate_minus1, making it vulnerable to potential out-of-bounds access if the input is not within a reasonable range. )
+- (gf_bs_read_int_log(bs, (u32)ceil(log1p((si->pps->pic_size_in_map_units_minus1 + 1) / (si->pps->slice_group_change_rate_minus1 + 1) / log(2)), "slice_group_change_cycle"), si->pps->pic_size_in_map_units_minus1, The code does not explicitly define a valid range for si->pps->pic_size_in_map_units_minus1, making it vulnerable to potential out-of-bounds access if the input is not within a reasonable range. )
+
+5. Final Vulnerability analysis verdict: vulnerability: YES
+
+
+
+

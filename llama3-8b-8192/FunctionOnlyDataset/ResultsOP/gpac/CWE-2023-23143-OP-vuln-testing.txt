@@ -1,0 +1,16 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The vulnerability is an Out-of-bounds Write.
+
+The function `avc_pred_weight_table` is called with the following parameters:
+
+* `bs`: a `GF_BitStream` pointer
+* `si->slice_type`: an integer
+* `si->sps->ChromaArrayType`: an integer
+* `num_ref_idx_l0_active_minus1`: an integer
+* `num_ref_idx_l1_active_minus1`: an integer
+
+The function `avc_pred_weight_table` is not shown in the provided code snippet, but it is likely to write data to the `GF_BitStream` at an offset calculated from the `si->slice_type`, `si->sps->ChromaArrayType`, `num_ref_idx_l0_active_minus1`, and `num_ref_idx_l1_active_minus1` values.
+
+The problem is that `num_ref_idx_l1_active_minus1` is assigned the value of `si->pps->num_ref_idx_l1_default_active_minus1`, which is not necessarily the same as the value read from the bitstream. This can lead to an Out-of-bounds Write if the value read from the bitstream is larger than the capacity of the `GF_BitStream`.
+
+| CWE Name: CWE-125 |

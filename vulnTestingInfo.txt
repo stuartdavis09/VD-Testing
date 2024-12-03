@@ -1,6 +1,7 @@
-testingDataset - linux
-testingCodeNumber - 45871
+testingDataset - pjsip
+testingCodeNumber - 27585
 patchStatus - vuln
 cweTested - 787
-promptingTechnique - OP
+promptingTechnique - OP-FS
 model - llama3-8b-8192
+dataset - SecLLMHolmesDataset

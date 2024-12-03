@@ -1,0 +1,20 @@
+Answer: (1) YES
+
+Explanation: The code is vulnerable to an Out-of-bounds Write vulnerability in the following lines:
+
+```c
+if (unicode_type==3)
+{
+    i=0;
+    while (1) {
+        char c;
+        if (!szLine[i] && !szLine[i+1]) break;
+        c = szLine[i+1];
+        szLine[i+1] = szLine[i];
+        szLine[i] = c;
+        i+=2;
+    }
+}
+```
+
+In this code, the variables `i` and `i+1` are used to access elements of the `szLine` array. However, there is no check to ensure that `i` and `i+1` are within the bounds of the array. This can lead to an Out-of-bounds Write vulnerability if `i` or `i+1` is greater than or equal to `lineSize`.

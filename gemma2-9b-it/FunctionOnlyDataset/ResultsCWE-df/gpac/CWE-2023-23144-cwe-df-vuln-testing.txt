@@ -1,0 +1,19 @@
+Data flow analysis of the given code snippet:
+1. Sources: 
+    1. `gf_bs_read_int(bs, NbBits)` 
+    2. `gf_bs_read_int(bs, 2)`
+2. Sinks: 
+    1. `m_ft[i]` 
+    2. `delta` 
+    3. `m_ft[orient]`
+    4. `m_ft[ (orient + i+1) % (NbComp+1) ]`
+3. Sanitizers: N/A
+4. Unsanitized Data Flows: 
+    1. ( `gf_bs_read_int(bs, NbBits)`, `m_ft[i]`,  `gf_bs_read_int(bs, NbBits)` could potentially lead to integer overflow if `NbBits` is not properly bounded and the read value exceeds the maximum representable value for a `u32`. )
+    2. ( `gf_bs_read_int(bs, 2)`, `dir`, `gf_bs_read_int(bs, 2)` could potentially lead to integer overflow if the read value exceeds the maximum representable value for a `s32`. )
+5. Final Vulnerability analysis verdict: vulnerability: YES 
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound|
+| explanation: The code does not perform bounds checking on the input values read from the bitstream using `gf_bs_read_int()`. This could lead to integer overflow if the read values exceed the maximum representable value for the corresponding data types (`u32` and `s32`). | 
+
+

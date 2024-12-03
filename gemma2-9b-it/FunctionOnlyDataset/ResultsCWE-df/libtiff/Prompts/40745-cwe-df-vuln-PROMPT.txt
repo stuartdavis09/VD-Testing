@@ -1,0 +1,110 @@
+System:
+You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
+Please provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.
+<OUTPUT FORMAT>
+Data flow analysis of the given code snippet:
+1. Sources: <numbered list of input sources>
+2. Sinks: <numbered list of output sinks>
+3. Sanitizers: <numbered list of sanitizers, if any>
+4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>
+5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>
+| vulnerability type: 190 |
+| vulnerability name: Integer Overflow or Wraparound|
+| explanation: <explanation for prediction>|
+
+
+User:
+ Is the following code snippet prone to Integer Overflow or Wraparound
+DECLAREreadFunc(readSeparateTilesIntoBuffer)
+{
+    int status = 1;
+    uint32_t imagew = TIFFRasterScanlineSize(in);
+    uint32_t tilew = TIFFTileRowSize(in);
+    int iskew;
+    tsize_t tilesize = TIFFTileSize(in);
+    tdata_t tilebuf;
+    uint8_t *bufp = (uint8_t *)buf;
+    uint32_t tw, tl;
+    uint32_t row;
+    uint16_t bps = 0, bytes_per_sample;
+
+    if (tilew && spp > (INT_MAX / tilew))
+    {
+        TIFFError(TIFFFileName(in),
+                  "Error, cannot handle that much samples per tile row (Tile "
+                  "Width * Samples/Pixel)");
+        return 0;
+    }
+
+    iskew = imagew - tilew * spp;
+    tilebuf = limitMalloc(tilesize);
+    if (tilebuf == 0)
+        return 0;
+    _TIFFmemset(tilebuf, 0, tilesize);
+    (void)TIFFGetField(in, TIFFTAG_TILEWIDTH, &tw);
+    (void)TIFFGetField(in, TIFFTAG_TILELENGTH, &tl);
+    (void)TIFFGetField(in, TIFFTAG_BITSPERSAMPLE, &bps);
+    if (bps == 0)
+    {
+        TIFFError(TIFFFileName(in), "Error, cannot read BitsPerSample");
+        status = 0;
+        goto done;
+    }
+    if ((bps % 8) != 0)
+    {
+        TIFFError(
+            TIFFFileName(in),
+            "Error, cannot handle BitsPerSample that is not a multiple of 8");
+        status = 0;
+        goto done;
+    }
+    bytes_per_sample = bps / 8;
+
+    for (row = 0; row < imagelength; row += tl)
+    {
+        uint32_t nrow = (row + tl > imagelength) ? imagelength - row : tl;
+        uint32_t colb = 0;
+        uint32_t col;
+
+        for (col = 0; col < imagewidth; col += tw)
+        {
+            tsample_t s;
+
+            for (s = 0; s < spp; s++)
+            {
+                if (TIFFReadTile(in, tilebuf, col, row, 0, s) < 0 && !ignore)
+                {
+                    TIFFError(TIFFFileName(in),
+                              "Error, can't read tile at %" PRIu32 " %" PRIu32
+                              ", "
+                              "sample %" PRIu16,
+                              col, row, s);
+                    status = 0;
+                    goto done;
+                }
+                /*
+                 * Tile is clipped horizontally.  Calculate
+                 * visible portion and skewing factors.
+                 */
+                if (colb + tilew * spp > imagew)
+                {
+                    uint32_t width = imagew - colb;
+                    int oskew = tilew * spp - width;
+                    cpSeparateBufToContigBuf(
+                        bufp + colb + s * bytes_per_sample, tilebuf, nrow,
+                        width / (spp * bytes_per_sample), oskew + iskew,
+                        oskew / spp, spp, bytes_per_sample);
+                }
+                else
+                    cpSeparateBufToContigBuf(bufp + colb + s * bytes_per_sample,
+                                             tilebuf, nrow, tw, iskew, 0, spp,
+                                             bytes_per_sample);
+            }
+            colb += tilew * spp;
+        }
+        bufp += imagew * nrow;
+    }
+done:
+    _TIFFfree(tilebuf);
+    return status;
+}?

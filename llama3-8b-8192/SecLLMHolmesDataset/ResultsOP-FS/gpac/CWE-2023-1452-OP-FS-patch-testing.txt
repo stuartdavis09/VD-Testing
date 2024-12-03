@@ -1,0 +1,10 @@
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The vulnerability is an Out-of-bounds Write.
+
+In the function `gf_text_get_utf8_line`, there is a loop that tries to convert a UTF-8 string to UTF-16. The loop iterates over the input string `szLine` and copies characters to a buffer `szLineConv`. The buffer size is fixed at 2048.
+
+However, there is no bounds checking on the size of the input string `szLine`. If the input string is longer than 2048 characters, the loop will write beyond the bounds of the buffer, leading to an Out-of-bounds Write.
+
+This vulnerability can be exploited by providing a large input string to the function, which will cause the function to write beyond the bounds of the buffer, potentially leading to arbitrary code execution.
+
+| CWE Name: CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') |

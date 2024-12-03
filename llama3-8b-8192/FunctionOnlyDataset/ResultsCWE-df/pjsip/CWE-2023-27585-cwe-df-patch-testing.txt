@@ -1,0 +1,48 @@
+Here is the output in the required format:
+
+Data flow analysis of the given code snippet:
+1. Sources: 
+	* `pkt`
+	* `start`
+	* `max`
+	* `pool`
+2. Sinks: 
+	* `rr->name.slen`
+	* `rr->name.ptr`
+	* `rr->type`
+	* `rr->dnsclass`
+	* `rr->ttl`
+	* `rr->rdlength`
+	* `rr->rdata.a.ip_addr`
+	* `rr->rdata.aaaa.ip_addr`
+	* `rr->rdata.cname.name.slen`
+	* `rr->rdata.cname.name.ptr`
+	* `rr->rdata.srv.prio`
+	* `rr->rdata.srv.weight`
+	* `rr->rdata.srv.port`
+	* `rr->rdata.srv.target.slen`
+	* `rr->rdata.srv.target.ptr`
+	* `rr->data`
+3. Sanitizers: 
+	* `pj_memcpy`
+4. Unsanitized Data Flows: 
+	* (`start`, `rr->name.slen`, `rr->name.slen` is not sanitized)
+	* (`start`, `rr->name.ptr`, `rr->name.slen` is not sanitized)
+	* (`start`, `rr->type`, `rr->type` is not sanitized)
+	* (`start`, `rr->dnsclass`, `rr->dnsclass` is not sanitized)
+	* (`start`, `rr->ttl`, `rr->ttl` is not sanitized)
+	* (`start`, `rr->rdlength`, `rr->rdlength` is not sanitized)
+	* (`start`, `rr->rdata.a.ip_addr`, `rr->rdata.a.ip_addr` is not sanitized)
+	* (`start`, `rr->rdata.aaaa.ip_addr`, `rr->rdata.aaaa.ip_addr` is not sanitized)
+	* (`start`, `rr->rdata.cname.name.slen`, `rr->rdata.cname.name.slen` is not sanitized)
+	* (`start`, `rr->rdata.cname.name.ptr`, `rr->rdata.cname.name.slen` is not sanitized)
+	* (`start`, `rr->rdata.srv.prio`, `rr->rdata.srv.prio` is not sanitized)
+	* (`start`, `rr->rdata.srv.weight`, `rr->rdata.srv.weight` is not sanitized)
+	* (`start`, `rr->rdata.srv.port`, `rr->rdata.srv.port` is not sanitized)
+	* (`start`, `rr->rdata.srv.target.slen`, `rr->rdata.srv.target.slen` is not sanitized)
+	* (`start`, `rr->rdata.srv.target.ptr`, `rr->rdata.srv.target.slen` is not sanitized)
+	* (`start`, `rr->data`, `rr->data` is not sanitized)
+5. Final Vulnerability analysis verdict: vulnerability: YES
+| vulnerability type: 787 |
+| vulnerability name: Out-of-bounds Write |
+| explanation: The code does not properly sanitize the data it receives from the input sources, potentially allowing an attacker to write data outside the bounds of a buffer.
