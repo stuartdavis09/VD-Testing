@@ -1,11 +1,34 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: The vulnerability is an Out-of-bounds Write. 
+2. Explanation: The code snippet is vulnerable to an Out-of-bounds Write vulnerability.
 
-In the function `parse_rr`, there is a potential vulnerability in the following lines:
-```
-rr->data = pj_pool_alloc(pool, rr->rdlength);
-pj_memcpy(rr->data, p, rr->rdlength);
-```
-Here, `rr->rdlength` is calculated from `p` and `max`, which are both user-controlled variables. If `rr->rdlength` is larger than `max - p`, it will cause an Out-of-bounds Write when copying the data from `p` to `rr->data`. 
+The vulnerability is located in the `parse_rr` function, specifically in the following lines:
 
-This vulnerability can be exploited by an attacker to write arbitrary data to the heap, potentially leading to code execution or other security issues.
+```c
+if (rr->type == PJ_DNS_TYPE_AAAA) {
+    pj_memcpy(&rr->rdata.aaaa.ip_addr, p, 16);
+    p += 16;
+
+} else if (rr->type == PJ_DNS_TYPE_CNAME ||
+           rr->type == PJ_DNS_TYPE_NS ||
+           rr->type == PJ_DNS_TYPE_PTR) 
+{
+    // ...
+    status = get_name(0, pkt, p, max, &rr->rdata.cname.name);
+    if (status != PJ_SUCCESS)
+        return status;
+
+    p += name_part_len;
+} else if (rr->type == PJ_DNS_TYPE_SRV) {
+    // ...
+    status = get_name(0, pkt, p, max, &rr->rdata.srv.target);
+    if (status != PJ_SUCCESS)
+        return status;
+    p += name_part_len;
+}
+```
+
+In these code paths, the `get_name` function is called, which recursively traverses the DNS name and updates the `name_len` and `parsed_len` variables. However, the `get_name` function does not check if the current offset `p` is within the bounds of the buffer `max`. This can lead to an Out-of-bounds Write vulnerability if the `get_name` function is called with an invalid or malicious input.
+
+For example, if an attacker can manipulate the `pkt` buffer to contain a DNS packet with a crafted name that exceeds the `max` buffer, the `get_name` function may write data beyond the end of the buffer, leading to an Out-of-bounds Write vulnerability.
+
+The same vulnerability can also occur in the `get_name_len` function, which is called recursively by the `get_name` function.

@@ -1,18 +1,5 @@
-1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+1. Vulnerability analysis: **YES, THERE IS A VULNERABILITY**
 
-2. Explanation: The vulnerability is in the `guessSize` function, specifically in the lines where it calculates the width and height of the image. 
-
-The width and height are calculated as follows:
-```
-w = (uint32_t)sqrt(imagesize / longt);
-h = imagesize / w;
-```
-Here, `imagesize` is the size of the input file minus the header size, and `longt` is a constant 40.0. 
-
-The issue is that the width and height are calculated based on the `imagesize` without considering the actual data type of the image. This can lead to an integer overflow if the `imagesize` is large enough, resulting in a wrong calculation of the width and height.
-
-For example, if `imagesize` is greater than `UINT32_MAX / longt`, the calculation of `w` will wrap around and result in a wrong value. This can then cause the calculation of `h` to also be incorrect.
-
-This vulnerability can be exploited by an attacker to manipulate the width and height of the image, potentially leading to a denial-of-service or other security issues.
+The vulnerability is an integer overflow in the `guessSize` function. The function calculates the `imagesize` variable as `(filestat.st_size - hdr_size) / nbands / depth`. If `filestat.st_size` is large enough, the subtraction `(filestat.st_size - hdr_size)` can cause an integer overflow, leading to a wrong calculation of `imagesize`. This can cause the function to return incorrect values for `width` and `length`, potentially leading to a denial-of-service attack or other security issues.
 
 CWE Name: CWE-190: Integer Overflow or Wraparound

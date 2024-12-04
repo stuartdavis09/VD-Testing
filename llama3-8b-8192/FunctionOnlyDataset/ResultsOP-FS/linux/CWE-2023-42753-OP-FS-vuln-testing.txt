@@ -1,2 +1,4 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
 2. Explanation: N/A
+
+CWE Name: CWE-190: Integer Overflow or Wraparound

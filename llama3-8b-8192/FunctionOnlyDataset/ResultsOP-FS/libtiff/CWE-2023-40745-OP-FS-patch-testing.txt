@@ -1,6 +1,19 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: 
+2. Explanation: N/A
 
-The vulnerability is due to an integer overflow in the line `iskew = imagew - tilew * spp;` where `iskew` is an integer and `imagew`, `tilew`, and `spp` are all unsigned integers. If `tilew * spp` is greater than `INT_MAX`, then `iskew` will wrap around and become a large negative number. This can cause issues in the subsequent code that uses `iskew`.
+The vulnerability in this code is an integer overflow in the following lines:
 
-CWE Name: CWE-190: Integer Overflow or Wraparound
+```c
+iskew = imagew - tilew * spp;
+if ( iskew > INT_MAX ){
+    TIFFError(TIFFFileName(in),
+              "Error, image raster scan line size is too large");
+    return 0;       
+}
+```
+
+The variable `iskew` is calculated as `imagew - tilew * spp`. If `imagew` and `tilew` are large and `spp` is greater than `INT_MAX / tilew`, then `iskew` can overflow and become a negative value. 
+
+When `iskew` is checked for being greater than `INT_MAX`, it will always be false because the comparison is done using signed integers and the result of the overflow is a negative value. This can lead to unexpected behavior in the code.
+
+The CWE name for this vulnerability is CWE-190: Integer Overflow or Wraparound.

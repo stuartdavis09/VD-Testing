@@ -1,11 +1,20 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The vulnerability is an Out-of-bounds Write.
 
-2. Explanation: 
+The vulnerability occurs in the `parse_rr` function, specifically in the following lines:
 
-The vulnerability is an Out-of-bounds Write vulnerability. It is present in the `parse_rr` function. The issue arises when parsing the DNS records. The function `get_name_len` is used to get the length of the name, and then the `get_name` function is used to get the actual name. However, the `get_name` function does not validate the length of the name and can potentially write beyond the end of the buffer.
+```c
+rr->name.ptr = (char*) pj_pool_alloc(pool, name_len+4);
+```
 
-In the `parse_rr` function, when parsing the RR records, the function `get_name_len` is called to get the length of the target name for the `CNAME`, `NS`, `PTR` and `SRV` records. Then, the `get_name` function is called to get the actual name. However, the `get_name` function does not validate the length of the name and can potentially write beyond the end of the buffer.
+And:
 
-This can lead to an Out-of-bounds Write vulnerability, as the function `get_name` can write data beyond the end of the buffer, potentially corrupting adjacent data or executing arbitrary code.
+```c
+rr->data = pj_pool_alloc(pool, rr->rdlength);
+```
 
-CWE Name: CWE-126: Buffer Error Handling Errors
+Here, `name_len` and `rr->rdlength` are calculated based on the input data, but they are not validated to ensure they are within the bounds of the allocated memory. This can lead to an Out-of-bounds Write if the calculated lengths are larger than the allocated memory.
+
+For example, in the `get_name` function, the `name_len` is calculated based on the input data, but it does not check if the calculated length is within the bounds of the allocated memory. If the calculated length is larger than the allocated memory, it can lead to an Out-of-bounds Write.
+
+The CWE name for this vulnerability is CWE-134: Use of Externally-Controlled Format String.

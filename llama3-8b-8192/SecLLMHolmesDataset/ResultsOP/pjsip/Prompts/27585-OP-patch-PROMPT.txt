@@ -751,4 +751,3 @@ PJ_DEF(void) pj_dns_init_cname_rr( pj_dns_parsed_rr *rec,
 --------------- END OF CODE ---------------
 
 Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
-Let’s think step-by-step

@@ -1,8 +1,10 @@
-1. Vulnerability analysis: **YES, THERE IS A VULNERABILITY**
-2. Explanation: **N/A**
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: N/A
 
-The vulnerability lies in the `parse_rr` function, specifically in the handling of the `rr->data` field. When `rr->type` is `PJ_DNS_TYPE_SRV`, `PJ_DNS_TYPE_A`, `PJ_DNS_TYPE_AAAA`, `PJ_DNS_TYPE_CNAME`, `PJ_DNS_TYPE_NS`, or `PJ_DNS_TYPE_PTR`, the function copies the `src->data` to `dst->data` without checking the length of `src->data`. This can lead to an Out-of-bounds Write vulnerability if `src->data` is larger than the allocated memory for `dst->data`.
+The vulnerability in the given code is an Out-of-bounds Write vulnerability. The vulnerability is in the `parse_rr` function where it copies the data from `p` to `rr->data` without checking the size of `rr->rdlength`. If `rr->rdlength` is greater than the size of the buffer pointed to by `p`, it can lead to an Out-of-bounds Write vulnerability.
 
-For example, if `rr->type` is `PJ_DNS_TYPE_SRV` and `src->data` is larger than 6 bytes (the size of `pj_dns_parsed_rr->rdata.srv`), the function will write beyond the bounds of `dst->data`, leading to a potential buffer overflow.
+In the `parse_rr` function, when it is parsing the RDATA section of the DNS packet, it does not check the size of the RDATA section before copying it to the `rr->data` buffer. This can lead to an Out-of-bounds Write vulnerability if the size of the RDATA section is greater than the size of the buffer.
 
-To fix this vulnerability, the function should check the length of `src->data` and allocate sufficient memory for `dst->data` before copying the data.
+For example, if `rr->rdlength` is 10 and the buffer pointed to by `p` is only 5 bytes long, then writing 10 bytes to the buffer will lead to an Out-of-bounds Write vulnerability.
+
+| CWE Name: CWE-122 |

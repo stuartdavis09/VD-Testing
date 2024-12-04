@@ -1,10 +1,8 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
 2. Explanation: N/A
 
-The vulnerability is in the `fill_kobj_path` function. The `length` parameter is decremented twice in the loop, once before the `memcpy` and once before the `*(path + --length) = '/';` statement. This means that the `length` variable is being used as a buffer size, and it is being decremented without checking if it is still within the bounds of the allocated `path` array.
+The code snippet contains a vulnerability in the `fill_kobj_path` function. The function calculates the length of the path by subtracting the length of each parent kobject's name from the initial length. However, it does not check if the remaining length is sufficient to accommodate the '/' character and the null-terminator. This can lead to an out-of-bounds write if the path is too long.
 
-The `kobject_get_path` function allocates memory for the `path` array using `kzalloc`, but it does not check if the `len` value returned by `get_kobj_path_length` is correct. If `get_kobj_path_length` returns a large value, `kzalloc` will allocate enough memory to store the path, but the `fill_kobj_path` function will still use the original `length` value, which is decremented without checking if it is still within the bounds of the allocated memory.
+The vulnerability is in the line `*(path + --length) = '/';` where the '/' character is appended to the path. If the remaining length is less than the size of a character, this can cause an out-of-bounds write.
 
-This can lead to an out-of-bounds write vulnerability, as the `fill_kobj_path` function is writing data beyond the end of the allocated `path` array.
-
-CWE Name: CWE-787: Out-of-Bounds Write
+| CWE Name: CWE-120: Buffer Copy without Checking Size of Input (classic) |

@@ -1,21 +1,11 @@
-1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+1. Vulnerability analysis: **YES, THERE IS A VULNERABILITY**
 
-The vulnerability is due to an integer overflow in the `hash_netportnet_uadt` function. The function processes the IP addresses, port numbers, and CIDR values, which can lead to an integer overflow.
+The code is vulnerable to integer overflow in the `hash_netportnet4_range_to_cidr` and `hash_netportnet6_range_to_cidr` functions. The functions calculate the `ip` and `ip2` variables which are used to calculate the `cidr` values. The `ip` and `ip2` variables are calculated using the `ip_set_range_to_cidr` function, which may result in an integer overflow if the input values are large.
 
-2. Explanation:
+The `ip_set_range_to_cidr` function calculates the `cidr` value by shifting the bits of the `ip` and `ip2` variables. If the input values are large, the shifting operation may cause an integer overflow, resulting in a wrong `cidr` value.
 
-The `hash_netportnet_uadt` function is responsible for updating the hash set. It processes the IP addresses, port numbers, and CIDR values from the user input and updates the hash set accordingly.
+The `ip_set_range_to_cidr` function is called in the `hash_netportnet4_do_data_match` and `hash_netportnet6_do_data_match` functions, which are used to calculate the `cidr` values for IPv4 and IPv6 addresses, respectively.
 
-The vulnerability occurs when the `ip_to` and `ip2_to` variables are calculated. These variables are used to calculate the range of IP addresses to be processed. The calculation is as follows:
+To prevent this vulnerability, the code should check for integer overflows and handle the errors properly.
 
-`ip_to = ip_set_get_hostipaddr4(tb[IPSET_ATTR_IP_TO], &ip_to);`
-
-`ip2_to = ip_set_get_hostipaddr4(tb[IPSET_ATTR_IP2_TO], &ip2_to);`
-
-The `ip_set_get_hostipaddr4` function is called to get the host IP address from the user input. However, the function does not check if the input is valid. If the input is not valid, it can lead to an integer overflow.
-
-For example, if the input is `0xFFFFFFFF` (the maximum value for an unsigned 32-bit integer), and the `ip_to` variable is calculated as `ip_to = ip + UINT_MAX`, it will overflow and wrap around to the minimum value of an unsigned 32-bit integer, which is `0`.
-
-This can lead to unexpected behavior and potential security vulnerabilities.
-
-CWE Name: CWE-190 - Integer Overflow or Wraparound
+| CWE Name: CWE-189 - Integer Overflow/Underflow

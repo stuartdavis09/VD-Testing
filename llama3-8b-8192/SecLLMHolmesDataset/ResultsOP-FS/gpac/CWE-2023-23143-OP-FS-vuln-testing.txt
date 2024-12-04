@@ -1,10 +1,14 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: The code snippet is an implementation of the H.264/AVC standard, specifically for parsing a slice header. The vulnerability lies in the allocation of memory for the `sps` and `pps` arrays.
+2. Explanation: N/A
 
-The `sps` array is allocated with a fixed size of 32, and the `pps` array is allocated with a fixed size of 255. However, the code allows the user to specify the `sps_id` and `pps_id` values, which can exceed the allocated memory bounds.
+The code snippet is parsing an H.264 bitstream and extracting various information such as picture order counts, reference pictures, and more. The function `avc_parse_slice` is responsible for parsing a single slice of the bitstream.
 
-For example, if `sps_id` is set to 32, it will access the 33rd element of the `sps` array, which is out of bounds. Similarly, if `pps_id` is set to 256, it will access the 257th element of the `pps` array, which is also out of bounds.
+The vulnerability lies in the way the `pps_id` and `sps_id` are handled. The `pps_id` is used to index into the `avc->pps` array, and the `sps_id` is used to index into the `avc->sps` array. However, there is no bounds checking on these indices.
 
-This can lead to an out-of-bounds write vulnerability, as the code attempts to access and modify memory outside the allocated bounds.
+The `pps_id` is read from the bitstream using `gf_bs_read_ue_log`, and it can be any unsigned integer. If the `pps_id` is greater than 255, it will cause an out-of-bounds write to the `avc->pps` array.
 
-CWE Name: CWE-126: Buffer Over-read
+Similarly, the `sps_id` is also read from the bitstream using `gf_bs_read_ue_log`, and it can be any unsigned integer. If the `sps_id` is greater than 31, it will cause an out-of-bounds write to the `avc->sps` array.
+
+This vulnerability can be exploited by crafting a malicious H.264 bitstream that sets the `pps_id` or `sps_id` to an out-of-bounds value, allowing an attacker to write arbitrary data to the `avc->pps` or `avc->sps` arrays.
+
+CWE Name: CWE-125: Out-of-Bounds Write

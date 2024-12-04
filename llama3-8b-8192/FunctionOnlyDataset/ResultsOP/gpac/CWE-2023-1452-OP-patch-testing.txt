@@ -1,22 +1,21 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: 
+2. Explanation: The vulnerability is an out-of-bounds write due to the use of an unbounded loop in the code.
 
-The vulnerability is an Out-of-bounds Write vulnerability, specifically in the function `gf_text_get_utf8_line`. 
+Specifically, the issue is in the following lines:
 
-The issue lies in the following lines of code:
-
-```c
-if (j >= GF_ARRAY_LENGTH(szLineConv) - 1) {
-    GF_LOG(GF_LOG_DEBUG, GF_LOG_PARSER, ("[TXTIn] Line too long to convert to utf8 (len: %d)\n", len));
-    break;
+```
+while (1) {
+    char c;
+    if (!szLine[i] && !szLine[i+1]) break;
+    c = szLine[i+1];
+    szLine[i+1] = szLine[i];
+    szLine[i] = c;
+    i+=2;
 }
-
-szLineConv[j] = 0;
-strcpy(szLine, szLineConv);
 ```
 
-When `j` is equal to or greater than `GF_ARRAY_LENGTH(szLineConv) - 1`, it means that the buffer `szLineConv` has been filled beyond its capacity. In this case, the code sets the current character to 0 and then copies the contents of `szLineConv` to `szLine`. 
+This loop continues until it finds a pair of consecutive null bytes (`szLine[i] && szLine[i+1]`) in the `szLine` buffer. However, there is no guarantee that such a pair exists, and the loop can potentially access and modify bytes beyond the end of the buffer.
 
-However, this can lead to an Out-of-bounds Write vulnerability because `szLineConv` is not checked for its actual length before being copied to `szLine`. If the length of `szLineConv` is greater than `lineSize`, `szLine` will be written beyond its bounds, leading to a potential buffer overflow.
+This can lead to an out-of-bounds write vulnerability, as the code is writing to memory locations that are not within the bounds of the `szLine` buffer.
 
-CWE Name: CWE-126 (Buffer Over-read)
+CWE Name: CWE-787: Out-of-Bounds Write

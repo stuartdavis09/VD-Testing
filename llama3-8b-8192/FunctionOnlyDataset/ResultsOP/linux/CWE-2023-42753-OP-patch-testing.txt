@@ -1,12 +1,18 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: 
+2. Explanation: The vulnerability is an integer overflow in the calculation of `e.ccmp` in both `hash_netportnet4_kadt` and `hash_netportnet6_kadt` functions. 
 
-The vulnerability lies in the calculation of `e.ccmp` in both `hash_netportnet4_kadt` and `hash_netportnet6_kadt` functions. 
+The calculation of `e.ccmp` is done as follows:
 
-In the `hash_netportnet4_kadt` function, the line `e.ccmp = (HOST_MASK << (sizeof(e.cidr[0]) * 8)) | HOST_MASK;` calculates `e.ccmp` by left-shifting `HOST_MASK` by the size of `e.cidr[0]` in bits, and then ORing it with `HOST_MASK`. 
+- In `hash_netportnet4_kadt`:
+  `e.ccmp = (HOST_MASK << (sizeof(e.cidr[0]) * 8)) | HOST_MASK;`
 
-In the `hash_netportnet6_kadt` function, the line `e.ccmp = (HOST_MASK << (sizeof(u8) * 8)) | HOST_MASK;` does the same thing, but with `sizeof(u8)` instead of `sizeof(e.cidr[0])`.
+- In `hash_netportnet6_kadt`:
+  `e.ccmp = (HOST_MASK << (sizeof(u8) * 8)) | HOST_MASK;`
 
-The issue is that these calculations can result in an integer overflow or wraparound if `HOST_MASK` is large enough and `sizeof(e.cidr[0])` or `sizeof(u8)` is small enough. This can lead to unexpected behavior, potentially causing the program to access memory outside its intended scope or execute arbitrary code.
+Here, `HOST_MASK` is a constant and `sizeof(e.cidr[0])` or `sizeof(u8)` is the size of the data type in bytes. 
 
-CWE Name: CWE-190: Integer Overflow or Wraparound
+The issue is that the shift operation `(HOST_MASK << (sizeof(e.cidr[0]) * 8))` or `(HOST_MASK << (sizeof(u8) * 8))` can cause an integer overflow if the size of `e.cidr[0]` or `u8` is larger than the maximum value that can be represented by an unsigned integer.
+
+This can lead to unexpected behavior and potential security vulnerabilities, such as buffer overflows or incorrect calculations.
+
+| CWE Name: CWE-190 |

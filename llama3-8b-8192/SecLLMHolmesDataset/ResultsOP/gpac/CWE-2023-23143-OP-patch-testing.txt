@@ -1,8 +1,6 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: The vulnerability is an Out-of-bounds Write.
+2. Explanation: The vulnerability is in the function `avc_pred_weight_table`. The function `avc_pred_weight_table` is called with user-controlled data `bs` and `si->sps->ChromaArrayType`. The function does not perform any bounds checking on the `bs` parameter, which is a bitstream. This allows an attacker to write data past the end or before the beginning of the intended buffer.
 
-The vulnerability is in the function `avc_parse_slice` where the variable `pps_id` is read from the bitstream and used to access the `pps` array. The condition `if ((pps_id<0) || (pps_id >= 255)) return -1;` ensures that the index is within the bounds of the array. However, there is no check to ensure that the `pps_id` does not exceed the maximum size of the `pps` array.
+The `ChromaArrayType` is also user-controlled and can be set to a value greater than 31. This can cause an out-of-bounds write when accessing `si->sps->ChromaArrayType`.
 
-An attacker can craft a bitstream that sets `pps_id` to a value greater than 254, which would cause an out-of-bounds write when accessing `avc->pps[pps_id]`. This could potentially overwrite sensitive data or compromise the integrity of the system.
-
-| CWE Name: CWE-125 |
+CWE Name: CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer

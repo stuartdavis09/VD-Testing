@@ -1,978 +1,246 @@
-```c
-```
-Let's
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+Let's break down the code and analyze the code snippet.
+Let'
 
-Let's
-```
-```
-```
-```
-```
-```
+Let's break down the code snippet.
+
+Let's break down the code snippet.
 
 Let'
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
 
-Let's
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+Let's break down the code snippet.
+Let's break down the code snippet.
 
-Let's
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+Let's break down the code snippet.
 
-Let's
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
 
-Let's
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+Let's break down the code snippet.
+Let's break down the code snippet.
 
-Let's
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
 
-Let's
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let's break down the code snippet.
+Let

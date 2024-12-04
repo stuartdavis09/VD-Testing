@@ -30,7 +30,7 @@ The user inputs a number of integers and they are added to another integer `sum`
 -----EXPLANATION END-----
 
 This is an example of patched code:
------PATCHED CODE 1 START-----
+-----PATCHED CODE START-----
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -51,7 +51,7 @@ int add_nums(int num, int *nums)
 
     return 0;
 }
------PATCHED CODE 1 END-----
+-----PATCHED CODE END-----
 
 -----EXPLANATION OF PATCH-----
 The user inputs a number of integers and they are added to another integer `sum` unless it becomes greater than `INT_MAX`. As `INT_MAX` is equal to the maximum value an integer can store, so if `sum` or `i` become greater than `INT_MAX` these will overflow and wrap around. To prevent that the while loop first checks if adding another integer crosses the `INT_MAX` limit of `sum` and `i` is less than the number of inputs given by the user, otherwise, it breaks the loop without adding another integer to it. So, the code is not vulnerable to integer overflow. 
@@ -103,4 +103,3 @@ GF_Err Q_DecCoordOnUnitSphere(GF_BifsDecoder *codec, GF_BitStream *bs, u32 NbBit
 --------------- END OF CODE ---------------
 
 Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
-Let’s think step-by-step

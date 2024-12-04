@@ -1,6 +1,15 @@
-1. Vulnerability analysis: NO, THERE IS NO VULNERABILITY
-2. Explanation: The code snippet provided is a part of a H.264/AVC video decoder. It is responsible for parsing the slice header of an H.264/AVC bitstream. The code appears to be correctly handling the parsing of various fields and flags within the slice header, and does not contain any obvious out-of-bounds write vulnerabilities.
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The vulnerability is an Out-of-bounds Write vulnerability. 
 
-The code does not use any untrusted data to index into arrays or structures, and the bounds of the data being read from the bitstream are correctly checked. The code also does not contain any obvious buffer overflows or underflows.
+The function `avc_pred_weight_table` is called with the following parameters: 
+- `bs`: a `GF_BitStream` pointer
+- `slice_type`: an integer
+- `sps->ChromaArrayType`: an integer
+- `num_ref_idx_l0_active_minus1`: an integer
+- `num_ref_idx_l1_active_minus1`: an integer
 
-However, it is always possible that there may be a vulnerability in the gf_bs_read_ue_log, gf_bs_read_int_log, or other similar functions that are used to read data from the bitstream. If these functions do not correctly handle the data being read, they could potentially allow an attacker to inject malicious data into the decoder.
+In the `avc_pred_weight_table` function, the parameters are used to calculate the size of an array and then write data to that array. However, the size of the array is not validated and is determined by the values of `slice_type`, `sps->ChromaArrayType`, `num_ref_idx_l0_active_minus1`, and `num_ref_idx_l1_active_minus1`. 
+
+If an attacker can control the values of these parameters, they can potentially write data past the end or before the beginning of the intended buffer, leading to an Out-of-bounds Write vulnerability.
+
+| CWE Name: CWE-787 |

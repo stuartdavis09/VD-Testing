@@ -26,22 +26,22 @@ vulnLang = {
 }
 
 dataset = {
-    # "gpac": {
-    #     "1452":"787",
-    #     "3012":"476",
-    #     "23143":"787",
-    #     "23144":"190"
-    # },
-    # "libtiff": {
-    #     "2908":"476",
-    #     "3316":"476",
-    #     "26966":"787",
-    #     "40745":"190",
-    #     "41175":"190"
-    # },
+    "gpac": {
+        "1452":"787",
+        "3012":"476",
+        "23143":"787",
+        "23144":"190"
+    },
+    "libtiff": {
+        "2908":"476",
+        "3316":"476",
+        "26966":"787",
+        "40745":"190",
+        "41175":"190"
+    },
     "linux": {
-        # "40283":"416",
-        # "42753":"190",
+        "40283":"416",
+        "42753":"190",
         "42754":"476",
         "45863":"787",
         "45871":"787"
@@ -173,7 +173,7 @@ def chatBot():
         promptTemplate = " Is the following code snippet prone to {0}\n{1}?".format(vulnName, code)
 
     elif inputs["promptingTechnique"] == "OP" or inputs["promptingTechnique"] == "OP-FS":
-        promptTemplate = "Please analyze the following code for {0}:\n\n--------------- START OF CODE ---------------\n{1}\n--------------- END OF CODE ---------------\n\nCarefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.\nLet’s think step-by-step".format(vulnName, code)
+        promptTemplate = "Please analyze the following code for {0}:\n\n--------------- START OF CODE ---------------\n{1}\n--------------- END OF CODE ---------------\n\nCarefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.".format(vulnName, code)
         
 
 
@@ -196,7 +196,7 @@ def chatBot():
         "cwe-df": "You are a security researcher, expert in detecting security vulnerabilities. Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.\nPlease provide a response only in the following itemized OUTPUT FORMAT. Use N/A in other fields if there are no vulnerabilities. DO NOT INCLUDE ANYTHING ELSE IN YOUR RESPONSE.\n<OUTPUT FORMAT>\nData flow analysis of the given code snippet:\n1. Sources: <numbered list of input sources>\n2. Sinks: <numbered list of output sinks>\n3. Sanitizers: <numbered list of sanitizers, if any>\n4. Unsanitized Data Flows: <numbered list of data flows that are not sanitized in the format (source, sink, why this flow could be vulnerable)>\n5. Final Vulnerability analysis verdict: vulnerability: <YES or NO>\n| vulnerability type: {0} |\n| vulnerability name: {1}|\n| explanation: <explanation for prediction>|".format(inputs["cweTested"], vulnName),
     
         "OP": "You are a security expert in detecting {0}.\n{1}\nGive your answer in the following structure:\n1. Vulnerability analysis: <YES, THERE IS A VULNERABILITY or NO, THERE IS NO VULNERABILITY>\n2. Explanation: <Leave as N/A if there is no vulnerability>\n| CWE Name: <Name of Vulnerability> |".format(vulnName, vulnDesc),
-        "OP-FS": "You are a security expert in detecting {0}.\n{1}\nThis is an example of vulnerable code:\n----VULNERABLE CODE START-----\n{2}\n-----VULNERABLE CODE END-----\n\n-----EXPLANATION OF VULNERABILITY-----\n{3}\n-----EXPLANATION END-----\n\nThis is an example of patched code:\n-----PATCHED CODE 1 START-----\n{4}\n-----PATCHED CODE 1 END-----\n\n-----EXPLANATION OF PATCH-----\n{5}\n-----EXPLANATION END-----\n\n\nGive your answer in the following structure:\n1. Vulnerability analysis: <YES, THERE IS A VULNERABILITY or NO, THERE IS NO VULNERABILITY>\n2. Explanation: <Leave as N/A if there is no vulnerability>\n| CWE Name: <Name of Vulnerability> |".format(vulnName, vulnDesc, vulnSamples[0], vulnSamples[1], patchedSamples[0], patchedSamples[1])
+        "OP-FS": "You are a security expert in detecting {0}.\n{1}\nThis is an example of vulnerable code:\n----VULNERABLE CODE START-----\n{2}\n-----VULNERABLE CODE END-----\n\n-----EXPLANATION OF VULNERABILITY-----\n{3}\n-----EXPLANATION END-----\n\nThis is an example of patched code:\n-----PATCHED CODE START-----\n{4}\n-----PATCHED CODE END-----\n\n-----EXPLANATION OF PATCH-----\n{5}\n-----EXPLANATION END-----\n\n\nGive your answer in the following structure:\n1. Vulnerability analysis: <YES, THERE IS A VULNERABILITY or NO, THERE IS NO VULNERABILITY>\n2. Explanation: <Leave as N/A if there is no vulnerability>\n| CWE Name: <Name of Vulnerability> |".format(vulnName, vulnDesc, vulnSamples[0], vulnSamples[1], patchedSamples[0], patchedSamples[1])
     }
 
     ############################################################

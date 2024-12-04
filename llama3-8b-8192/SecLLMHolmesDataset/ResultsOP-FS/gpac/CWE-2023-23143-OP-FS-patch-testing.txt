@@ -1,18 +1,8 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: 
+2. Explanation: N/A
 
-In the given code snippet, there is a potential out-of-bounds write vulnerability. The vulnerability lies in the `avc_pred_weight_table` function call. 
+The vulnerability is in the `avc_parse_slice` function. The issue is that the `sps` array is not properly bounded when accessing its elements. The `sps` array is declared as `AVC_SPS sps[32];`, but later in the code, the `sps_active_idx` variable is used to access the `sps` array, which can potentially go out of bounds.
 
-The function `avc_pred_weight_table` is called when `si->pps->weighted_pred_flag` is true and `si->slice_type` is either `GF_AVC_TYPE_P` or `GF_AVC_TYPE_SP`. 
+The `sps_active_idx` variable is set to `si->pps->sps_id`, which can be any value between 0 and 254 (inclusive). However, the `sps` array has a fixed size of 32, and accessing an index greater than 31 will result in an out-of-bounds write.
 
-The function `avc_pred_weight_table` is not shown in the given code snippet, but based on its name, it likely calculates and stores weights for prediction. 
-
-The issue is that the function is called with `num_ref_idx_l0_active_minus1` and `num_ref_idx_l1_active_minus1` as parameters, which are calculated earlier in the code. 
-
-However, the values of `num_ref_idx_l0_active_minus1` and `num_ref_idx_l1_active_minus1` are not validated before being passed to the function. 
-
-If `num_ref_idx_l0_active_minus1` or `num_ref_idx_l1_active_minus1` is greater than the size of the arrays or structures being accessed, it can cause an out-of-bounds write. 
-
-This is a potential vulnerability because an attacker could manipulate the input data to cause the function to access memory outside its bounds, leading to arbitrary code execution. 
-
-| CWE Name: CWE-126: Buffer Over-read |
+This vulnerability can be exploited by crafting a malicious input that sets `si->pps->sps_id` to a value greater than 31, allowing an attacker to write data to arbitrary memory locations.

@@ -770,4 +770,3 @@ DECLAREwriteFunc(writeBufferToContigTiles)
 --------------- END OF CODE ---------------
 
 Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
-Let’s think step-by-step

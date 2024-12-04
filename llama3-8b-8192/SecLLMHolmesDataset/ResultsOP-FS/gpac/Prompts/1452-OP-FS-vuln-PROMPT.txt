@@ -50,7 +50,7 @@ The `censored_words` array is allocated based on the length of the longest word 
 -----EXPLANATION END-----
 
 This is an example of patched code:
------PATCHED CODE 1 START-----
+-----PATCHED CODE START-----
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -92,7 +92,7 @@ char** censor_words(char** words, int num_words, int longest_word_length){
     return censored_words;
 }
 
------PATCHED CODE 1 END-----
+-----PATCHED CODE END-----
 
 -----EXPLANATION OF PATCH-----
 The `censored_words` array is allocated based on the length of the longest word from both the `censored` list and the user input `words`. So, later any word from `words` or `censored` cannot exceed the allocated memory bound, protecting it from an out-of-bound write. So, the code is not vulnerable to out-of-bound write. 
@@ -349,4 +349,3 @@ char *gf_text_get_utf8_line(char *szLine, u32 lineSize, FILE *txt_in, s32 unicod
 --------------- END OF CODE ---------------
 
 Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
-Let’s think step-by-step

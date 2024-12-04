@@ -1,13 +1,12 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: The code is vulnerable to an Out-of-bounds Write vulnerability.
+2. Explanation: N/A
 
-The vulnerability is located in the following lines of code:
+The vulnerability is in the line:
 
-```c
-sptr = (u16 *)szLine;
-i = gf_utf8_wcstombs(szLineConv, 2048, (const unsigned short **) &sptr);
-```
+`szLineConv[j] = 0xc0 | ( (szLine[i] >> 6) & 0x3 );`
 
-Here, `szLine` is a buffer of size `lineSize` which is not guaranteed to be large enough to hold the converted UTF-16 characters. The `gf_utf8_wcstombs` function is called with `szLineConv` as the destination buffer and `szLine` as the source buffer. The function converts the UTF-16 characters in `szLine` to UTF-8 and stores the result in `szLineConv`. However, the function does not check if `szLine` is large enough to hold the converted characters. If `szLine` is too small, the function will write data past the end of the buffer, causing an Out-of-bounds Write.
+Here, `j` is incremented before writing to `szLineConv[j]`. If `j` is equal to 2047 (the size of `szLineConv`), this will cause an out-of-bounds write.
 
-CWE Name: CWE-122: Buffer Copy without Checking Size of Input (aka Classic Buffer Overflow)
+The CWE name for this vulnerability is CWE-787: Out-of-Bounds Write.
+
+The data flow from the source is the input `szLine` which is a character array. The sink is the `szLineConv` array which is also a character array. The vulnerability occurs when the code tries to write to `szLineConv` without checking the bounds of `j` first.

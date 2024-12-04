@@ -3,5 +3,5 @@ testingCodeNumber - 27585
 patchStatus - vuln
 cweTested - 787
 promptingTechnique - OP-FS
-model - llama3-8b-8192
+model - gemma2-9b-it
 dataset - SecLLMHolmesDataset

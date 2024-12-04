@@ -1,3 +1,8 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The code snippet is part of an H.264/AVC decoder and is responsible for parsing the slice header of an H.264/AVC bitstream. The vulnerability is due to an out-of-bounds write in the `avc_pred_weight_table` function, which is called based on the value of `si->slice_type`.
 
-2. Explanation: N/A
+The `avc_pred_weight_table` function writes data to the `bs` buffer, which is a `GF_BitStream` structure. The function takes several parameters, including `num_ref_idx_l0_active_minus1` and `num_ref_idx_l1_active_minus1`, which are calculated based on the values of `si->pps->num_ref_idx_l0_default_active_minus1` and `si->pps->num_ref_idx_l1_default_active_minus1`, respectively.
+
+However, the `avc_pred_weight_table` function does not check the bounds of the `num_ref_idx_l0_active_minus1` and `num_ref_idx_l1_active_minus1` variables before writing data to the `bs` buffer. This can lead to an out-of-bounds write if the values of these variables are greater than the allocated size of the `bs` buffer.
+
+CWE Name: CWE-762: Missing Authorization

@@ -1,15 +1,13 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
 
-2. Explanation: The vulnerability is in the code that checks for integer overflow when calculating the maximum allowed values for width, length, and header size. The code uses the expression `UINT_MAX / temp_limit_check` to calculate the maximum allowed value, which can lead to integer overflow if `temp_limit_check` is large enough. This can cause the code to incorrectly reject valid input values or allow too large values, leading to potential security issues.
+2. Explanation: The vulnerability is an integer overflow in the following lines of code:
 
-Specifically, the vulnerable code is in the following lines:
-```c
-if ( !temp_limit_check || length > ( UINT_MAX / temp_limit_check ) )  {
+```
+if (!temp_limit_check || length > ( UINT_MAX / temp_limit_check ) )  {
     fprintf(stderr, "Too large length size specified.\n");
     return (EXIT_FAILURE);
 }
 temp_limit_check = temp_limit_check * width;
-
 if ( !temp_limit_check || width > ( UINT_MAX / temp_limit_check ) )  {
     fprintf(stderr, "Too large width size specified.\n");
     return (EXIT_FAILURE);
@@ -19,4 +17,5 @@ if ( !temp_limit_check || hdr_size > ( UINT_MAX - temp_limit_check ) )  {
     return (EXIT_FAILURE);
 }
 ```
-CWE Name: CWE-189: Integer Overflow/Underflow
+
+Here, `temp_limit_check` is calculated as `nbands * depth` initially, and then multiplied by `length` and `width` in subsequent checks. If `nbands` or `depth` is large enough, the multiplication can cause an integer overflow, leading to a wrong calculation of `temp_limit_check`. This can result in a buffer overflow when the code checks if `hdr_size` is within the limit of `UINT_MAX - temp_limit_check`.

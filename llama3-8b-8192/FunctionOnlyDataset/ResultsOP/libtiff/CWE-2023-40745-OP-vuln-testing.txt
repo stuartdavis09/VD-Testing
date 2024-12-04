@@ -1,10 +1,8 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: The vulnerability is an integer overflow in the calculation of `oskew` in the following code snippet:
+2. Explanation: The vulnerability is an integer overflow in the following line of code:
 
-```c
-int oskew = tilew * spp - width;
-```
+if (colb + tilew * spp > imagew)
 
-The value of `tilew * spp` can exceed the maximum value that can be stored in an `int` type, causing an integer overflow. This can lead to unexpected behavior, such as incorrect calculations or even crashes.
+Here, `colb` is a `uint32_t`, `tilew` is a `uint32_t`, and `spp` is an `int`. The result of the expression `tilew * spp` is an `int` and can overflow if `tilew` is large and `spp` is negative. If this happens, the result will be wrapped around and treated as a large positive value, which can lead to unexpected behavior.
 
-CWE Name: CWE-190: Integer Overflow or Wraparound
+CWE Name: CWE-190 - Integer Overflow or Wraparound

@@ -1,352 +1,1076 @@
-1. **Vulnerability Analysis: YES, THERE IS A VULNERABILITY
-2. **Explanation:
-The code snippet you provided contains a potential NULL pointer dereference vulnerability. 
+1. Vulnerability analysis: <YES, THERE IS A VULNERABILITY>
+2. Explanation: <
+The code snippet you provided has a potential NULL pointer dereference vulnerability. 
+Let's break down why:
 
-Let's break down the potential issue:
+**Potential NULL Pointer Dereference**
 
-* **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   ```
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK`. 
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   ```
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1`. If it is, it reallocates memory for `parser->buffer`
-   * **Line:
-   ```c
-   
-   memcpy(parser->buffer+size, string, sizeof(char)*nl_size;
-   ```
-   * **Explanation: This line copies `string` to `parser->buffer`
+The code snippet you provided has a potential NULL pointer dereference vulnerability. 
+Let's break down why:
 
-   * **Line:
-   ```c
-   parser->buffer[size+nl_size = 0;
-   ```
-   * **Explanation: This line sets the last character in `parser->buffer` to the null terminator.
+* **Missing Null Checks:**
+    *  The code doesn't consistently check if pointers are NULL before dereferencing them.
+    *  Example:
+        * `xml_sax_parse_attribute(parser)` function call
+        * `xml_sax_parse_entity(parser)` function call
+* **External API Calls:**
+    * `xml_sax_parse_attribute(parser)`
+    *  `xml_sax_parse_comments(parser)`
+    * `xml_sax_skip_doctype(parser)`
+    * `xml_sax_skip_xml_proc(parser)`
+    * `xml_sax_cdata(parser)`
 
-**Vulnerability
-The vulnerability is in the line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   ```
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1`. If it is, it reallocates memory for `parser->buffer`
+**Vulnerability Explanation:**
+    *  If `xml_sax_parse_attribute(parser)` returns a NULL pointer,  the code might dereference a NULL pointer, leading to a crash or unexpected behavior.
 
+**How to Fix It:**
+    *  Always check for NULL before dereferencing pointers. For instance, before calling a function that might return a NULL pointer, add a check:
+        * `if (function_result != NULL) {
+        *  // Use function_result;
+        * }
+    *  The same applies to `xml_sax_parse_entity(parser)` and other functions that might return NULL.
 
-Let's break down the potential issue:
+**Important Notes:**
+    *  The code does not provide enough context to determine if a NULL pointer dereference vulnerability exists.
+    *  The code does not provide enough context to determine if a NULL pointer dereference vulnerability exists.
+    *  The code does not provide enough context to determine if a NULL pointer dereference vulnerability exists.
+    *  The code does not provide enough context to determine if a NULL pointer dereference vulnerability exists.
 
-* **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK`.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer`
+**Recommendations:**
+    *  Always check for NULL pointers before dereferencing them. 
+    *  Always check for NULL pointers before dereferencing them.
+    *  Always check for NULL pointers before dereferencing them.
+    *  Always check for NULL pointers before dereferencing them.
 
 
-Let's break down the potential issue:
 
-* **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK`.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer`
+3. CWE Name: CWE-47
+4. CWE Description: NULL Pointer Dereference
 
-Let's break down the potential issue:
+ 
+4.
 
-* **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK`.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer
-   * **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK`.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer
+The code does not provide enough context to determine if a NULL pointer dereference vulnerability exists.
+The code does not provide enough context to determine if a NULL pointer dereference vulnerability exists.
+The code does not provide enough context to determine if a NULL pointer dereference vulnerability exists.
 
 
-Let's break down the potential issue:
 
-* **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK`.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer
-   * **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer
-   * **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer
-   * **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer
-   * **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer
-   * **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If `nl_size` is zero, it returns `GF_OK.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it reallocates memory for `parser->buffer
-   * **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size` is zero. If it is, it returns `GF_OK.
-   * **Line:
-   ```c
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size` is less than `size+nl_size+1. If it is, it returns `GF_OK.
-   * **Line:
-   ```c
-   if (!nl_size) return GF_OK;
-   * **Explanation: This line checks if `nl_size
-   * **Line:
-   if ((parser->alloc_size < size+nl_size+1)
-   * **Explanation: This line checks if `parser->alloc_size
-   * **Line:
-   if ((parser->alloc_size
-   ```c
-   if ((parser->alloc_size
-   * **Explanation:
-   if ((parser->
-   * **Explanation:
-   if ((parser->alloc_size
-   * **Explanation:
-   if ((parser->
-   * **Explanation:
-   if ((parser->
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
-   * **Explanation:
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```
+  
+```cpp
+  
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp
+  
+```cpp

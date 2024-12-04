@@ -99,4 +99,3 @@ char *gf_text_get_utf8_line(char *szLine, u32 lineSize, FILE *txt_in, s32 unicod
 --------------- END OF CODE ---------------
 
 Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
-Let’s think step-by-step

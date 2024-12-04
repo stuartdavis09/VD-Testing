@@ -1,32 +1,47 @@
-1. **Vulnerability analysis:** YES, THERE IS A VULNERABILITY
+1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
+2. Explanation: The code snippet contains several functions that parse and manipulate DNS packets. The vulnerability lies in the `parse_rr` function, where the `rr->data` field is allocated without checking the `rr->rdlength` field. This can lead to an out-of-bounds write if `rr->rdlength` is larger than the allocated memory.
 
-The vulnerability is an Out-of-bounds Write vulnerability in the `parse_rr` function. 
+| CWE Name: CWE-787: Out-of-Bounds Write |
 
-2. **Explanation:**
-
-The `parse_rr` function is responsible for parsing Resource Record (RR) data from a DNS packet. It iterates over the packet, parsing the length of the target name, allocating memory for the name, and copying the name from the packet. 
-
-However, there is no bounds checking on the `name_len` variable, which is calculated as the length of the target name. If `name_len` is larger than the available memory, it can lead to an Out-of-bounds Write vulnerability.
-
-The vulnerability is exploitable because the `parse_rr` function is called recursively, allowing an attacker to manipulate the `name_len` variable and potentially write data outside the allocated buffer.
-
-**CWE Name:** CWE-122: Buffer Over-read
-
-**CWE Description:** The software reads data past the end of the intended buffer, leading to possible information disclosure, crashes, or other unpredictable behavior.
-
-**Patch:**
-
-To fix this vulnerability, you should add bounds checking on the `name_len` variable to ensure that it does not exceed the available memory. You can do this by checking if `name_len` is less than or equal to the size of the allocated buffer before copying the name.
-
-Here is the patched code:
+The specific code snippet that is vulnerable to this issue is:
 
 ```c
-status = get_name_len(0, pkt, p, max, &name_part_len, &name_len);
-if (status != PJ_SUCCESS)
-    return status;
+/* Parse some well known records */
+if (rr->type == PJ_DNS_TYPE_A) {
+    pj_memcpy(&rr->rdata.a.ip_addr, p, 4);
+    p += 4;
 
-if (name_len > (max - p))
-    return PJLIB_UTIL_EDNSINSIZE;
+} else if (rr->type == PJ_DNS_TYPE_AAAA) {
+    pj_memcpy(&rr->rdata.aaaa.ip_addr, p, 16);
+    p += 16;
 
-// ... rest of the code ...
+} else if (rr->type == PJ_DNS_TYPE_CNAME ||
+           rr->type == PJ_DNS_TYPE_NS ||
+           rr->type == PJ_DNS_TYPE_PTR) 
+{
+    /* Get the length of the target name */
+    status = get_name_len(0, pkt, p, max, &name_part_len, &name_len);
+    if (status != PJ_SUCCESS)
+        return status;
+
+    /* Allocate memory for the name */
+    rr->rdata.cname.name.ptr = (char*) pj_pool_alloc(pool, name_len);
+    rr->rdata.cname.name.slen = 0;
+
+    /* Get the name */
+    status = get_name(0, pkt, p, max, &rr->rdata.cname.name);
+    if (status != PJ_SUCCESS)
+        return status;
+
+    p += name_part_len;
+
+} else {
+    /* Copy the raw data */
+    rr->data = pj_pool_alloc(pool, rr->rdlength);
+    pj_memcpy(rr->data, p, rr->rdlength);
+
+    p += rr->rdlength;
+}
 ```
+
+In this code snippet, `rr->data` is allocated using `pj_pool_alloc` without checking `rr->rdlength`. If `rr->rdlength` is larger than the allocated memory, this can lead to an out-of-bounds write.

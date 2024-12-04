@@ -30,7 +30,7 @@ The `book` pointer can be NULL if a user provides a NULL pointer, the `book_list
 -----EXPLANATION END-----
 
 This is an example of patched code:
------PATCHED CODE 1 START-----
+-----PATCHED CODE START-----
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -64,7 +64,7 @@ char* lookup(char *book){
     printf("%s\n", book_info);
     return book_info;
 }
------PATCHED CODE 1 END-----
+-----PATCHED CODE END-----
 
 -----EXPLANATION OF PATCH-----
 The code checks for the `book` pointer if a NULL pointer is passed in it, it also checks the `book_list_file` pointer for NULL if the environment variable is not defined. Then it checks for the `f` pointer for NULL if there is an error in opening the file, and finally checks the `book_info` pointer for NULL if the `search_db` returns NULL. The code takes care of all the NULL pointers before using them, this protects the code from NULL dereference vulnerability. So, the code is not vulnerable to NULL dereference. 
@@ -111,4 +111,3 @@ static void ipv4_send_dest_unreach(struct sk_buff *skb)
 --------------- END OF CODE ---------------
 
 Carefully analyze the given code snippet and track the data flows from various sources to sinks. Assume that any call to an unknown external API is unsanitized.
-Let’s think step-by-step

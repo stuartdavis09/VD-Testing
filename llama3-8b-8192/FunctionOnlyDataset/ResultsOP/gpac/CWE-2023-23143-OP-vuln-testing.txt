@@ -1,16 +1,15 @@
 1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: The vulnerability is an Out-of-bounds Write.
+2. Explanation: The vulnerability is an Out-of-bounds Write vulnerability. The issue is in the following lines of code:
+```
+if (si->nal_unit_type == 20 || si->nal_unit_type == 21) {
+    GF_LOG(GF_LOG_ERROR, GF_LOG_CODING, ("[avc-h264] unimplemented ref_pic_list_mvc_modification() in slide header\n"));
+    assert(0);
+    return -1;
+}
+else {
+    ref_pic_list_modification(bs, si->slice_type);
+}
+```
+The `ref_pic_list_modification` function is called with an unsanitized `bs` parameter, which is a `GF_BitStream` object. This function is not shown in the provided code snippet, but it could potentially write data past the end of the buffer or before the beginning, leading to an Out-of-bounds Write vulnerability.
 
-The function `avc_pred_weight_table` is called with the following parameters:
-
-* `bs`: a `GF_BitStream` pointer
-* `si->slice_type`: an integer
-* `si->sps->ChromaArrayType`: an integer
-* `num_ref_idx_l0_active_minus1`: an integer
-* `num_ref_idx_l1_active_minus1`: an integer
-
-The function `avc_pred_weight_table` is not shown in the provided code snippet, but it is likely to write data to the `GF_BitStream` at an offset calculated from the `si->slice_type`, `si->sps->ChromaArrayType`, `num_ref_idx_l0_active_minus1`, and `num_ref_idx_l1_active_minus1` values.
-
-The problem is that `num_ref_idx_l1_active_minus1` is assigned the value of `si->pps->num_ref_idx_l1_default_active_minus1`, which is not necessarily the same as the value read from the bitstream. This can lead to an Out-of-bounds Write if the value read from the bitstream is larger than the capacity of the `GF_BitStream`.
-
-| CWE Name: CWE-125 |
+CWE Name: CWE-125: Out-of-bounds Write

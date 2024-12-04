@@ -1,10 +1,10 @@
 1. Vulnerability analysis: **YES, THERE IS A VULNERABILITY**
-2. Explanation: The code parses DNS packets and duplicates them. The `parse_query` and `parse_rr` functions handle the parsing of query and response records, respectively. The `apply_name_table` function is used to compress names in the nametable.
+2. Explanation: N/A
 
-The vulnerability lies in the `apply_name_table` function. It uses a fixed-size array `nametable` to store duplicate names. If the number of unique names exceeds `PJ_DNS_MAX_NAMES_IN_NAMETABLE`, the function will overwrite existing names in the array, leading to a buffer overflow.
+The vulnerability is in the `parse_rr` function, specifically in the handling of the `rr->type` field. When `rr->type` is equal to `PJ_DNS_TYPE_A`, `PJ_DNS_TYPE_AAAA`, `PJ_DNS_TYPE_CNAME`, `PJ_DNS_TYPE_NS`, `PJ_DNS_TYPE_PTR`, or `PJ_DNS_TYPE_SRV`, the function copies the contents of `rr->data` to `rr->rdata` without checking the length of `rr->data`. This can lead to a buffer overflow if `rr->data` is longer than `rr->rdlength`.
 
-The `copy_query` and `copy_rr` functions use the `nametable` array to store duplicate names. If the `nametable` array is full, the functions will overwrite existing names, leading to a buffer overflow.
+For example, in the case of `PJ_DNS_TYPE_A`, the function copies 4 bytes from `rr->data` to `rr->rdata.a.ip_addr`, but it does not check if `rr->data` is longer than 4 bytes. If `rr->data` is longer, the extra bytes will be written to `rr->rdata.a.ip_addr`, potentially overwriting adjacent memory locations.
 
-The vulnerability can be exploited by crafting a DNS packet with a large number of unique names, causing the `nametable` array to overflow.
+Similarly, in the case of `PJ_DNS_TYPE_SRV`, the function copies 16 bytes from `rr->data` to `rr->rdata.srv.target`, but it does not check if `rr->data` is longer than 16 bytes.
 
-| CWE Name: CWE-120 |
+To fix this vulnerability, the function should check the length of `rr->data` before copying its contents to `rr->rdata`.

@@ -1,15 +1,2 @@
-1. Vulnerability analysis: YES, THERE IS A VULNERABILITY
-2. Explanation: The code is vulnerable to integer overflow or wraparound in the `hash_netportnet4_kadt` and `hash_netportnet6_kadt` functions.
-
-The vulnerability is in the following lines of code:
-
-```c
-e.cidr[0] = INIT_CIDR(h->nets[0].cidr[0], HOST_MASK);
-e.cidr[1] = INIT_CIDR(h->nets[0].cidr[1], HOST_MASK);
-```
-
-The `INIT_CIDR` function is not shown in the code snippet, but it is likely to be a macro that shifts and ORs the input values. If the input values are large, they can cause an integer overflow or wraparound when shifted and ORed.
-
-For example, if `h->nets[0].cidr[0]` is `UINT_MAX` and `HOST_MASK` is also large, the expression `INIT_CIDR(h->nets[0].cidr[0], HOST_MASK)` can cause an integer overflow or wraparound.
-
-| CWE Name: CWE-190 |
+1. Vulnerability analysis: NO, THERE IS NO VULNERABILITY
+2. Explanation: N/A
